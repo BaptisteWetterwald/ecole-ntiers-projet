@@ -1,0 +1,48 @@
+# .NET build results
+bin/
+obj/
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.userprefs
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows Installer directory
+publish/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+
+# ASP.NET Core
+wwwroot/
+*.dat
+
+# JetBrains Rider
+.idea/
+
+# Node.js
+node_modules/
+
+# NuGet
+*.nupkg
+.nuget/
+packages/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
