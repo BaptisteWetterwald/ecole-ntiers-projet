@@ -12,7 +12,7 @@ namespace Blaze4.Application.Services
             var game = new Game
             {
                 Host = host,
-                Status = "Awaiting Guest",
+                Status = Game.AwaitingGuest,
                 Grid = new Grid()
             };
 
@@ -23,7 +23,7 @@ namespace Blaze4.Application.Services
         // Récupérer les parties en attente d'invité
         public List<Game> GetGamesAwaitingGuest()
         {
-            return _games.Where(g => g.Status == "Awaiting Guest").ToList();
+            return _games.Where(g => g.Status == Game.AwaitingGuest).ToList();
         }
 
         // Permettre à un invité de rejoindre une partie existante
@@ -47,7 +47,7 @@ namespace Blaze4.Application.Services
         public List<Game> GetGamesAwaitingPlayerAction(Player player)
         {
             return _games.Where(g =>
-                g.Status == "In Progress" &&
+                g.Status == Game.InProgress &&
                 ((g.Host == player || g.Guest == player) && 
                 (g.IsPlayerTurn(player) && !g.Grid.IsFull()) || !g.CheckWinCondition())).ToList();
         }
@@ -56,34 +56,31 @@ namespace Blaze4.Application.Services
         public string PlayTurn(Guid gameId, Player player, int column)
         {
             var game = _games.FirstOrDefault(g => g.Id == gameId);
-            if (game == null) return "Game not found.";
+            if (game == null)
+                return "Game not found";
 
-            // Vérifier si c'est le tour du joueur
             if (!game.IsPlayerTurn(player))
-                return "It's not your turn.";
+                return "It's not your turn";
 
-            // Jouer le tour
-            var token = new Token { Color = player == game.Host ? "Red" : "Yellow" };
-            bool win = game.Grid.DropToken(column, token);
-
-            // Vérifier la condition de victoire
-            if (win)
-            {
-                game.Status = "Finished";
-                return $"{player.Login} wins!";
-            }
-
-            // Vérifier si la grille est pleine
             if (game.Grid.IsFull())
-            {
-                game.Status = "Finished";
-                return "It's a draw!";
-            }
+                return "The grid is full";
 
-            // Passer au tour suivant
+            game.PlayTurn(player, column);
+
+            if (game.Status == Game.Finished)
+                return "Game finished";
+            
             game.SwitchTurn();
+            return "Turn played";
+        }
+        
+        public void StartGame(Guid gameId)
+        {
+            var game = _games.FirstOrDefault(g => g.Id == gameId);
+            if (game == null)
+                return;
 
-            return "Turn played successfully.";
+            game.StartGame();
         }
     }
 }

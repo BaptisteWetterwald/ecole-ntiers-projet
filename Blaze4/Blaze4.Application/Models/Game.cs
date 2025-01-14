@@ -2,6 +2,10 @@
 
 public class Game
 {
+    
+    public static string AwaitingGuest = "Awaiting Guest";
+    public static string InProgress = "In Progress";
+    public static string Finished = "Finished";
     /*
      * class Game {
         +Player host
@@ -18,15 +22,15 @@ public class Game
     public Player Host { get; set; } // Joueur hôte
     public Player? Guest { get; set; } // Joueur invité
     public Grid Grid { get; set; } = new(); // Grille de jeu
-    public string Status { get; set; } = "Awaiting Guest"; // Statut de la partie ("Awaiting Guest", "In Progress", "Finished")
-
+    public string Status { get; set; } = AwaitingGuest; // Statut de la partie ("Awaiting Guest", "In Progress", "Finished")
+    
     private Player? _currentTurn; // Joueur dont c'est le tour
 
     // Méthode pour démarrer une partie
     public void StartGame()
     {
         if (Guest == null) throw new InvalidOperationException("A guest must join before starting the game.");
-        Status = "In Progress";
+        Status = InProgress; // La partie est en cours
         _currentTurn = Host; // Le joueur hôte commence
     }
 
@@ -52,7 +56,7 @@ public class Game
     // Méthode pour jouer un tour
     public void PlayTurn(Player player, int column)
     {
-        if (Status != "In Progress") throw new InvalidOperationException("The game is not in progress.");
+        if (Status != InProgress) throw new InvalidOperationException("The game is not in progress.");
         if (Grid.IsFull()) throw new InvalidOperationException("The grid is full.");
         if (player != Host && player != Guest) throw new UnauthorizedAccessException("Only participants can play.");
         if (player != _currentTurn) throw new InvalidOperationException("It's not your turn."); // Vérifie si c'est bien le tour du joueur
@@ -61,7 +65,7 @@ public class Game
         {
             if (CheckWinCondition())
             {
-                Status = "Finished"; // La partie est terminée si un joueur gagne
+                Status = Finished; // La partie est terminée si un joueur gagne
             }
             else
             {
