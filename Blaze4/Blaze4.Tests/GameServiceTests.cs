@@ -34,12 +34,14 @@ namespace Blaze4.Tests
 
             // Act
             var joinedGame = service.JoinGame(guest, game.Id);
+            var startedGame = service.StartGame(game.Id);
 
             // Assert
             joinedGame.Should().NotBeNull();
             joinedGame!.Guest.Should().Be(guest);
             joinedGame.Status.Should().Be(Game.InProgress);
             joinedGame.Id.Should().Be(game.Id);
+            startedGame.Should().BeEquivalentTo(joinedGame);
         }
 
         [Fact]
@@ -124,6 +126,7 @@ namespace Blaze4.Tests
             var guest = new Player { Login = "Bob" };
             var game = service.CreateGame(host);
             service.JoinGame(guest, game.Id);
+            service.StartGame(game.Id);
             service.PlayTurn(game.Id, host, 0);
 
             // Act

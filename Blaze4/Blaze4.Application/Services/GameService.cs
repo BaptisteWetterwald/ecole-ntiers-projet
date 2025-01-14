@@ -57,30 +57,31 @@ namespace Blaze4.Application.Services
         {
             var game = _games.FirstOrDefault(g => g.Id == gameId);
             if (game == null)
-                return "Game not found";
+                return "Game not found.";
 
             if (!game.IsPlayerTurn(player))
-                return "It's not your turn";
+                return "It's not your turn.";
 
             if (game.Grid.IsFull())
-                return "The grid is full";
+                return "The grid is full.";
 
             game.PlayTurn(player, column);
 
             if (game.Status == Game.Finished)
-                return "Game finished";
+                return "Game finished, {game.Host.Login} wins!";
             
             game.SwitchTurn();
-            return "Turn played";
+            return "Turn played successfully.";
         }
         
-        public void StartGame(Guid gameId)
+        public Game StartGame(Guid gameId)
         {
             var game = _games.FirstOrDefault(g => g.Id == gameId);
             if (game == null)
-                return;
-
+                throw new InvalidOperationException("Game not found.");
+            
             game.StartGame();
+            return game;
         }
     }
 }
