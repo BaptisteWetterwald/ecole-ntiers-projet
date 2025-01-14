@@ -4,6 +4,7 @@ using System.Net.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Blaze4.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,10 @@ builder.Services.AddCors(options =>
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+// Modif to register GameService (gpt)
+builder.Services.AddScoped<GameService>(); // Enregistre GameService
+// End Modif to register GameService (gpt)
 
 var app = builder.Build();
 

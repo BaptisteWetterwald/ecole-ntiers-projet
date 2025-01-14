@@ -18,4 +18,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Blaze4.Application\Blaze4.Application.csproj" />
+  </ItemGroup>
+
 </Project>
