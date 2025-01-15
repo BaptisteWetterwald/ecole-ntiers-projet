@@ -38,5 +38,13 @@ namespace Blaze4Backend.Controllers
 
             return Unauthorized();
         }
+
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return Ok();
+        }
+
     }
 }

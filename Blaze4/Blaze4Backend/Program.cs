@@ -78,6 +78,12 @@ app.MapGet("/weatherforecast", () =>
 })
 .WithName("GetWeatherForecast");
 
+
+// Modif to add GameService (gpt)
+app.MapGet("/games", (GameService service) => service.GetGamesAwaitingGuest())
+    .WithName("GetGamesAwaitingGuest");
+// End Modif to add GameService (gpt)
+
 app.Run();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)

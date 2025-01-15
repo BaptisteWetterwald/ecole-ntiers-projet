@@ -19,18 +19,22 @@ namespace Blaze4Backend.Controllers
             _gameService = gameService;
         }
 
+        // POST api/game/start : starts a new game with given id and player logins
         [HttpPost("start")]
-        public IActionResult StartGame(string hostLogin)
+        public ActionResult<Game> StartGame(string hostLogin)
         {
-            _gameService.StartGame(hostLogin);
-            return Ok();
+            var host = new Player { Login = hostLogin };
+            var game = _gameService.CreateGame(host);
+            return game;
         }
-
+        
+        // POST api/game/play-turn : plays a turn in the game with given id
         [HttpPost("play-turn")]
-        public IActionResult PlayTurn(string playerLogin, int column)
+        public ActionResult<string> PlayTurn(Guid gameId, string playerLogin, int column)
         {
-            _gameService.PlayTurn(playerLogin, column);
-            return Ok();
+            var player = new Player { Login = playerLogin };
+            var result = _gameService.PlayTurn(gameId, player, column);
+            return result;
         }
     }
     
