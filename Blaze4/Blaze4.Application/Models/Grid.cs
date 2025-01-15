@@ -1,4 +1,6 @@
-﻿namespace Blaze4.Application.Models;
+﻿using System.Text;
+
+namespace Blaze4.Application.Models;
 
 public class Grid
 {
@@ -27,7 +29,7 @@ public class Grid
             if (Cells[row, column].Token == null)
             {
                 Cells[row, column].Token = token;
-                return CheckWin();
+                return true; // Token dropped successfully
             }
         }
         throw new InvalidOperationException("This column is full.");
@@ -49,25 +51,26 @@ public class Grid
         {
             for (int col = 0; col < Columns - 3; col++) // Vérifier 4 cases à partir de chaque colonne
             {
+                // Vérifier si les 4 cases sont du même joueur, use .Equals() to compare Token objects
                 if (Cells[row, col].Token != null &&
-                    Cells[row, col].Token == Cells[row, col + 1].Token &&
-                    Cells[row, col].Token == Cells[row, col + 2].Token &&
-                    Cells[row, col].Token == Cells[row, col + 3].Token)
+                    Cells[row, col].Token.Equals(Cells[row, col + 1].Token) &&
+                    Cells[row, col].Token.Equals(Cells[row, col + 2].Token) &&
+                    Cells[row, col].Token.Equals(Cells[row, col + 3].Token))
                 {
                     return true; // Victoire horizontale
                 }
             }
         }
-
+        
         // Vérification des colonnes (vertical)
         for (int col = 0; col < Columns; col++)
         {
             for (int row = 0; row < Rows - 3; row++) // Vérifier 4 cases à partir de chaque ligne
             {
                 if (Cells[row, col].Token != null &&
-                    Cells[row, col].Token == Cells[row + 1, col].Token &&
-                    Cells[row, col].Token == Cells[row + 2, col].Token &&
-                    Cells[row, col].Token == Cells[row + 3, col].Token)
+                    Cells[row, col].Token.Equals(Cells[row + 1, col].Token) &&
+                    Cells[row, col].Token.Equals(Cells[row + 2, col].Token) &&
+                    Cells[row, col].Token.Equals(Cells[row + 3, col].Token))
                 {
                     return true; // Victoire verticale
                 }
@@ -80,9 +83,9 @@ public class Grid
             for (int col = 0; col < Columns - 3; col++) // Vérifier 4 cases diagonales
             {
                 if (Cells[row, col].Token != null &&
-                    Cells[row, col].Token == Cells[row + 1, col + 1].Token &&
-                    Cells[row, col].Token == Cells[row + 2, col + 2].Token &&
-                    Cells[row, col].Token == Cells[row + 3, col + 3].Token)
+                    Cells[row, col].Token.Equals(Cells[row + 1, col + 1].Token) &&
+                    Cells[row, col].Token.Equals(Cells[row + 2, col + 2].Token) &&
+                    Cells[row, col].Token.Equals(Cells[row + 3, col + 3].Token))
                 {
                     return true; // Victoire diagonale haut-gauche à bas-droit
                 }
@@ -94,10 +97,16 @@ public class Grid
         {
             for (int col = 0; col < Columns - 3; col++) // Vérifier 4 cases diagonales
             {
-                if (Cells[row, col].Token != null &&
+                /*
+                 * Cells[row, col].Token != null &&
                     Cells[row, col].Token == Cells[row - 1, col + 1].Token &&
                     Cells[row, col].Token == Cells[row - 2, col + 2].Token &&
                     Cells[row, col].Token == Cells[row - 3, col + 3].Token)
+                 */
+                if (Cells[row, col].Token != null &&
+                    Cells[row, col].Token.Equals(Cells[row - 1, col + 1].Token) &&
+                    Cells[row, col].Token.Equals(Cells[row - 2, col + 2].Token) &&
+                    Cells[row, col].Token.Equals(Cells[row - 3, col + 3].Token))
                 {
                     return true; // Victoire diagonale bas-gauche à haut-droit
                 }
@@ -106,5 +115,23 @@ public class Grid
 
         // Si aucune condition de victoire n'est remplie
         return false;
+    }
+    
+    public override string ToString()
+    {
+        // Displays the first letter of the color of each token in the grid, or a . if the cell is empty, separate each column by a | and each row by a newline
+        
+        var sb = new StringBuilder();
+        sb.AppendLine();
+        for (int row = 0; row < Rows; row++)
+        {
+            for (int col = 0; col < Columns; col++)
+            {
+                sb.Append(Cells[row, col].Token?.Color[0] ?? '.');
+                sb.Append('|');
+            }
+            sb.AppendLine();
+        }
+        return sb.ToString();
     }
 }

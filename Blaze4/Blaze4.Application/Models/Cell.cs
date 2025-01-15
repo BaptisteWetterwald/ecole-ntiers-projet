@@ -20,4 +20,5 @@ public class Cell
         Row = row;
         Column = column;
     }
+    
 }

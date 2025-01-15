@@ -50,6 +50,13 @@ namespace Blaze4.Tests
 
             // Assert
             grid.Cells[5, 0].Token.Should().Be(token);
+            
+            // Act
+            token = new Token { Color = "Yellow" };
+            grid.DropToken(0, token);
+            
+            // Assert
+            grid.Cells[4, 0].Token.Should().Be(token);
         }
 
         [Fact]

@@ -19,19 +19,20 @@ public class Game
     }
      */
     public Guid Id { get; private set; } = Guid.NewGuid(); // Identifiant de la partie
-    public Player Host { get; set; } // Joueur hôte
+    public required Player Host { get; set; } // Joueur hôte
     public Player? Guest { get; set; } // Joueur invité
     public Grid Grid { get; set; } = new(); // Grille de jeu
     public string Status { get; set; } = AwaitingGuest; // Statut de la partie ("Awaiting Guest", "In Progress", "Finished")
-    
-    private Player? _currentTurn; // Joueur dont c'est le tour
+    public Player? Winner { get; set; } // Joueur gagnant    
+    public Player? CurrentTurn { get; set; } // Joueur dont c'est le tour
 
     // Méthode pour démarrer une partie
     public void StartGame()
     {
         if (Guest == null) throw new InvalidOperationException("A guest must join before starting the game.");
         Status = InProgress; // La partie est en cours
-        _currentTurn = Host; // Le joueur hôte commence
+        CurrentTurn = Host; // Le joueur hôte commence
+        Winner = null; // Pas de gagnant pour l'instant
     }
 
     // Méthode pour rejoindre une partie
@@ -44,13 +45,13 @@ public class Game
     // Méthode pour vérifier si c'est le tour du joueur
     public bool IsPlayerTurn(Player player)
     {
-        return _currentTurn == player;
+        return CurrentTurn == player;
     }
 
     // Méthode pour changer de tour
     public void SwitchTurn()
     {
-        _currentTurn = _currentTurn == Host ? Guest : Host;
+        CurrentTurn = CurrentTurn == Host ? Guest : Host;
     }
 
     // Méthode pour jouer un tour
@@ -59,16 +60,18 @@ public class Game
         if (Status != InProgress) throw new InvalidOperationException("The game is not in progress.");
         if (Grid.IsFull()) throw new InvalidOperationException("The grid is full.");
         if (player != Host && player != Guest) throw new UnauthorizedAccessException("Only participants can play.");
-        if (player != _currentTurn) throw new InvalidOperationException("It's not your turn."); // Vérifie si c'est bien le tour du joueur
+        if (player != CurrentTurn) throw new InvalidOperationException("It's not your turn."); // Vérifie si c'est bien le tour du joueur
 
         if (Grid.DropToken(column, new Token { Color = player == Host ? "Red" : "Yellow" }))
         {
             if (CheckWinCondition())
             {
                 Status = Finished; // La partie est terminée si un joueur gagne
+                Winner = player; // Le joueur gagnant est celui qui a joué le dernier tour
             }
             else
             {
+                if (Grid.IsFull()) Status = Finished; // La partie est terminée si la grille est pleine
                 SwitchTurn(); // Change le tour du joueur
             }
         }
@@ -79,4 +82,5 @@ public class Game
     {
         return Grid.CheckWin();
     }
+
 }

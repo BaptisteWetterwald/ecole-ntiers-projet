@@ -2,6 +2,8 @@
 using Blaze4.Application.Services;
 using FluentAssertions;
 using Xunit;
+using Xunit.Abstractions;
+using Xunit.Sdk;
 
 namespace Blaze4.Tests
 {
@@ -95,7 +97,7 @@ namespace Blaze4.Tests
             var result = service.PlayTurn(game.Id, host, 0);
 
             // Assert
-            result.Should().Be("Turn played successfully.");
+            result.Should().Be("Turn played.");
             game.Grid.Cells[5, 0].Token.Should().NotBeNull();
             game.Grid.Cells[5, 0].Token.Color.Should().Be("Red");
         }
@@ -157,14 +159,15 @@ namespace Blaze4.Tests
             service.PlayTurn(game.Id, guest, 1); // Bob
             service.PlayTurn(game.Id, host, 0); // Alice
             service.PlayTurn(game.Id, guest, 1); // Bob
-            var result = service.PlayTurn(game.Id, host, 0); // Alice gagne ici
-
+            
+            service.PlayTurn(game.Id, host, 0); // Alice gagne ici
+            
             // Assert
-            result.Should().Contain("wins");
             game.Status.Should().Be(Game.Finished);
+            game.Winner.Should().Be(host);
         }
 
-        /*
+        
          [Fact]
         public void PlayTurn_ShouldEndGameWhenDraw()
         {
@@ -174,21 +177,56 @@ namespace Blaze4.Tests
             var guest = new Player { Login = "Bob" };
             var game = service.CreateGame(host);
             service.JoinGame(guest, game.Id);
-
-            // Simuler un scénario où la grille est pleine sans vainqueur
-            for (int i = 0; i < Grid.Rows * Grid.Columns; i++)
-            {
-                var column = i % Grid.Columns;
-                service.PlayTurn(game.Id, i % 2 == 0 ? host : guest, column);
-            }
-
-            // Act
-            var result = service.PlayTurn(game.Id, host, 0); // Dernier tour
-
+            service.StartGame(game.Id);
+            
+            // Simuler un scénario où la grille est pleine sans gagnant
+            service.PlayTurn(game.Id, host, 0); 
+            service.PlayTurn(game.Id, guest, 0); 
+            service.PlayTurn(game.Id, host, 0); 
+            service.PlayTurn(game.Id, guest, 0); 
+            service.PlayTurn(game.Id, host, 0); 
+            service.PlayTurn(game.Id, guest, 0); 
+            service.PlayTurn(game.Id, host, 1); 
+            service.PlayTurn(game.Id, guest, 1); 
+            service.PlayTurn(game.Id, host, 1); 
+            service.PlayTurn(game.Id, guest, 1); 
+            service.PlayTurn(game.Id, host, 1); 
+            service.PlayTurn(game.Id, guest, 1); 
+            service.PlayTurn(game.Id, host, 2); 
+            service.PlayTurn(game.Id, guest, 2); 
+            service.PlayTurn(game.Id, host, 2); 
+            service.PlayTurn(game.Id, guest, 2); 
+            service.PlayTurn(game.Id, host, 2); 
+            service.PlayTurn(game.Id, guest, 3); 
+            service.PlayTurn(game.Id, host, 3); 
+            service.PlayTurn(game.Id, guest, 3); 
+            service.PlayTurn(game.Id, host, 3); 
+            service.PlayTurn(game.Id, guest, 3); 
+            service.PlayTurn(game.Id, host, 3); 
+            service.PlayTurn(game.Id, guest, 4); 
+            service.PlayTurn(game.Id, host, 4); 
+            service.PlayTurn(game.Id, guest, 4); 
+            service.PlayTurn(game.Id, host, 4); 
+            service.PlayTurn(game.Id, guest, 4); 
+            service.PlayTurn(game.Id, host, 4); 
+            service.PlayTurn(game.Id, guest, 5); 
+            service.PlayTurn(game.Id, host, 5); 
+            service.PlayTurn(game.Id, guest, 5); 
+            service.PlayTurn(game.Id, host, 5); 
+            service.PlayTurn(game.Id, guest, 5); 
+            service.PlayTurn(game.Id, host, 5); 
+            service.PlayTurn(game.Id, guest, 2); 
+            service.PlayTurn(game.Id, host, 6); 
+            service.PlayTurn(game.Id, guest, 6); 
+            service.PlayTurn(game.Id, host, 6); 
+            service.PlayTurn(game.Id, guest, 6); 
+            service.PlayTurn(game.Id, host, 6); 
+            service.PlayTurn(game.Id, guest, 6); 
+            
             // Assert
-            result.Should().Be("It's a draw!");
-            game.Status.Should().Be("Finished");
+            game.Status.Should().Be(Game.Finished);
+            game.Winner.Should().BeNull();
         }
-        */
+        
     }
 }

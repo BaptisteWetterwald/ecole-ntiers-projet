@@ -58,7 +58,7 @@ namespace Blaze4.Application.Services
             var game = _games.FirstOrDefault(g => g.Id == gameId);
             if (game == null)
                 return "Game not found.";
-
+            
             if (!game.IsPlayerTurn(player))
                 return "It's not your turn.";
 
@@ -68,10 +68,9 @@ namespace Blaze4.Application.Services
             game.PlayTurn(player, column);
 
             if (game.Status == Game.Finished)
-                return "Game finished, {game.Host.Login} wins!";
+                return "Game finished.";
             
-            game.SwitchTurn();
-            return "Turn played successfully.";
+            return "Turn played.";
         }
         
         public Game StartGame(Guid gameId)
