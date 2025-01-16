@@ -122,4 +122,12 @@ public class Grid
         }
         return sb.ToString();
     }
+    
+    public Cell GetCell(int row, int column)
+    {
+        if (row < 0 || row >= Rows || column < 0 || column >= Columns)
+            throw new ArgumentOutOfRangeException("Invalid cell coordinates.");
+
+        return _cells[row, column];
+    }
 }
