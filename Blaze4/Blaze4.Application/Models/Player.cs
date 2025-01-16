@@ -2,16 +2,18 @@
 
 public class Player
 {
-    /*
-     * class Player {
-        +String login
-        +String password
-        +List<Game> games
-    }
-     */
-    
-    public string Login { get; set; } // Identifiant unique du joueur
-    public string Password { get; set; } // Mot de passe du joueur (hashé)
-    public List<Game> Games { get; set; } = new(); // Parties associées au joueur
+    public string Login { get; }
+    public string Password { get; }
+    public List<Game> Games { get; } = new();
 
+    public Player(string login, string password)
+    {
+        Login = login;
+        Password = password;
+    }
+
+    public bool ValidateCredentials(string login, string password)
+    {
+        return Login == login && Password == password;
+    }
 }

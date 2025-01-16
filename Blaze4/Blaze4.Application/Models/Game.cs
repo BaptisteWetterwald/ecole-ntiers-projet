@@ -3,84 +3,65 @@
 public class Game
 {
     
-    public static string AwaitingGuest = "Awaiting Guest";
-    public static string InProgress = "In Progress";
-    public static string Finished = "Finished";
-    /*
-     * class Game {
-        +Player host
-        +Player guest
-        +Grid grid
-        +String status
-        +startGame()
-        +joinGame(Player guest)
-        +playTurn(Player player, int column)
-        +checkWinCondition(): boolean
-    }
-     */
-    public Guid Id { get; private set; } = Guid.NewGuid(); // Identifiant de la partie
-    public required Player Host { get; set; } // Joueur hôte
-    public Player? Guest { get; set; } // Joueur invité
-    public Grid Grid { get; set; } = new(); // Grille de jeu
-    public string Status { get; set; } = AwaitingGuest; // Statut de la partie ("Awaiting Guest", "In Progress", "Finished")
-    public Player? Winner { get; set; } // Joueur gagnant    
-    public Player? CurrentTurn { get; set; } // Joueur dont c'est le tour
-
-    // Méthode pour démarrer une partie
-    public void StartGame()
+    public static class Statuses
     {
-        if (Guest == null) throw new InvalidOperationException("A guest must join before starting the game.");
-        Status = InProgress; // La partie est en cours
-        CurrentTurn = Host; // Le joueur hôte commence
-        Winner = null; // Pas de gagnant pour l'instant
+        public const string AwaitingGuest = "Awaiting Guest";
+        public const string InProgress = "In Progress";
+        public const string Finished = "Finished";
+    }
+    
+    public Player Host { get; private set; }
+    public Player? Guest { get; private set; }
+    public Grid Grid { get; private set; } = new();
+    public string Status { get; private set; } = Statuses.AwaitingGuest;
+    public Player? Winner { get; private set; }
+    public Player? CurrentTurn { get; private set; }
+
+    public Game(Player host)
+    {
+        Host = host;
+        CurrentTurn = null;
     }
 
-    // Méthode pour rejoindre une partie
     public void JoinGame(Player guest)
     {
-        if (Guest != null) throw new InvalidOperationException("This game already has a guest.");
+        if (Guest != null) throw new InvalidOperationException("A guest has already joined.");
         Guest = guest;
+        CurrentTurn = Guest; // L'invité commence.
     }
 
-    // Méthode pour vérifier si c'est le tour du joueur
-    public bool IsPlayerTurn(Player player)
+    public void PlayTurn(Player player, int column)
     {
-        return CurrentTurn == player;
+        if (player != CurrentTurn) throw new InvalidOperationException("Not your turn.");
+        if (Status != "In Progress") throw new InvalidOperationException("Game is not in progress.");
+
+        var token = new Token(player == Host ? "Red" : "Yellow");
+        Grid.DropToken(column, token);
+
+        if (Grid.CheckWin())
+        {
+            Status = Statuses.Finished;
+            Winner = player;
+        }
+        else if (Grid.IsFull())
+        {
+            Status = Statuses.Finished; // Match nul
+        }
+        else
+        {
+            SwitchTurn();
+        }
     }
 
-    // Méthode pour changer de tour
-    public void SwitchTurn()
+    private void SwitchTurn()
     {
         CurrentTurn = CurrentTurn == Host ? Guest : Host;
     }
 
-    // Méthode pour jouer un tour
-    public void PlayTurn(Player player, int column)
+    public void StartGame()
     {
-        if (Status != InProgress) throw new InvalidOperationException("The game is not in progress.");
-        if (Grid.IsFull()) throw new InvalidOperationException("The grid is full.");
-        if (player != Host && player != Guest) throw new UnauthorizedAccessException("Only participants can play.");
-        if (player != CurrentTurn) throw new InvalidOperationException("It's not your turn."); // Vérifie si c'est bien le tour du joueur
-
-        if (Grid.DropToken(column, new Token { Color = player == Host ? "Red" : "Yellow" }))
-        {
-            if (CheckWinCondition())
-            {
-                Status = Finished; // La partie est terminée si un joueur gagne
-                Winner = player; // Le joueur gagnant est celui qui a joué le dernier tour
-            }
-            else
-            {
-                if (Grid.IsFull()) Status = Finished; // La partie est terminée si la grille est pleine
-                SwitchTurn(); // Change le tour du joueur
-            }
-        }
+        if (Guest == null) throw new InvalidOperationException("A guest must join before starting.");
+        Status = Statuses.InProgress;
     }
-
-    // Méthode pour vérifier les conditions de victoire
-    public bool CheckWinCondition()
-    {
-        return Grid.CheckWin();
-    }
-
 }
+
