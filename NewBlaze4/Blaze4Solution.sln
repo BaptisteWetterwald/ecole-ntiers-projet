@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blaze4Backend", "Blaze4Backend\Blaze4Backend.csproj", "{634ECD07-496F-4E95-8D81-FBA4678958FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blaze4Frontend", "Blaze4Frontend\Blaze4Frontend.csproj", "{15F41930-B28A-46A8-AA1E-CA84C6040789}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blaze4.Tests", "Blaze4.Tests\Blaze4.Tests.csproj", "{2B5CC287-88C6-4087-ACC1-A9BBA68D95AE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{634ECD07-496F-4E95-8D81-FBA4678958FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{634ECD07-496F-4E95-8D81-FBA4678958FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{634ECD07-496F-4E95-8D81-FBA4678958FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{634ECD07-496F-4E95-8D81-FBA4678958FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15F41930-B28A-46A8-AA1E-CA84C6040789}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15F41930-B28A-46A8-AA1E-CA84C6040789}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15F41930-B28A-46A8-AA1E-CA84C6040789}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15F41930-B28A-46A8-AA1E-CA84C6040789}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B5CC287-88C6-4087-ACC1-A9BBA68D95AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B5CC287-88C6-4087-ACC1-A9BBA68D95AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B5CC287-88C6-4087-ACC1-A9BBA68D95AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B5CC287-88C6-4087-ACC1-A9BBA68D95AE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
