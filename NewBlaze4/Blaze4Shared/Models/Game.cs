@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
-
-namespace Blaze4Shared.Models;
+﻿namespace Blaze4Shared.Models;
 
 public class Game
 {
@@ -11,22 +9,28 @@ public class Game
         public const string InProgress = "In Progress";
         public const string Finished = "Finished";
     }
+
+    public Player Host { get; set; }
+    public Player? Guest { get; set; }
+    public Player? CurrentTurn { get; set; }
     
-    public Player Host { get; private set; }
-    public Player? Guest { get; private set; }
     public Grid Grid { get; private set; } = new();
     public string Status { get; private set; } = Statuses.AwaitingGuest;
     public Player? Winner { get; private set; }
-    public Player? CurrentTurn { get; private set; }
     
     public Guid Id { get; set; } = Guid.NewGuid();
     public Guid HostId { get; set; }
     public Guid? GuestId { get; set; }
     
+    // Constructeur par défaut requis pour EF Core
+    private Game() { }
+    
     public Game(Player host)
     {
         Host = host;
         CurrentTurn = null;
+        Grid = new Grid();
+        Status = Statuses.AwaitingGuest;
     }
 
     public void JoinGame(Player guest)

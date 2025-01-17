@@ -4,6 +4,8 @@ namespace Blaze4Shared.Models;
 
 public class Grid
 {
+    
+    public Guid Id { get; set; } = Guid.NewGuid(); // Clé primaire
     public const int Rows = 6;
     public const int Columns = 7;
     private readonly Cell[,] _cells;
