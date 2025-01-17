@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Blaze4Backend\Blaze4Backend.csproj" />
+    <ProjectReference Include="..\Blaze4Database\Blaze4Database.csproj" />
   </ItemGroup>
 
 </Project>

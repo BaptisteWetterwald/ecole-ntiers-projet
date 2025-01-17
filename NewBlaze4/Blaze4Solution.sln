@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blaze4Frontend", "Blaze4Fro
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blaze4.Tests", "Blaze4.Tests\Blaze4.Tests.csproj", "{2B5CC287-88C6-4087-ACC1-A9BBA68D95AE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blaze4Database", "Blaze4Database\Blaze4Database.csproj", "{5DEDC945-432A-4332-B5AA-B92E4DEA80BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blaze4Shared", "Blaze4Shared\Blaze4Shared.csproj", "{0D700FF8-DE05-45F5-BD03-3FB9BABE854F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +34,13 @@ Global
 		{2B5CC287-88C6-4087-ACC1-A9BBA68D95AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B5CC287-88C6-4087-ACC1-A9BBA68D95AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B5CC287-88C6-4087-ACC1-A9BBA68D95AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DEDC945-432A-4332-B5AA-B92E4DEA80BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DEDC945-432A-4332-B5AA-B92E4DEA80BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DEDC945-432A-4332-B5AA-B92E4DEA80BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DEDC945-432A-4332-B5AA-B92E4DEA80BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D700FF8-DE05-45F5-BD03-3FB9BABE854F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D700FF8-DE05-45F5-BD03-3FB9BABE854F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D700FF8-DE05-45F5-BD03-3FB9BABE854F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D700FF8-DE05-45F5-BD03-3FB9BABE854F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -1,3 +1,6 @@
+using Blaze4Database;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Modif base url for HttpClient (gpt)
@@ -15,6 +18,10 @@ builder.Services.AddCors(options =>
     });
 });
 // End Modif for CORS (gpt)
+
+builder.Services.AddDbContext<Blaze4DbContext>(options =>
+    options.UseSqlite("Data Source=blaze4.db"));
+
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

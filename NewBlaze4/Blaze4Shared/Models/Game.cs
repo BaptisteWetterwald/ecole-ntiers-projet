@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace Blaze4Backend.Models;
+namespace Blaze4Shared.Models;
 
 public class Game
 {
@@ -23,13 +23,6 @@ public class Game
     public Guid HostId { get; set; }
     public Guid? GuestId { get; set; }
     
-    // Entity Framework needs a serializer
-    public string GridJson
-    {
-        get => JsonSerializer.Serialize(Grid);
-        set => Grid = JsonSerializer.Deserialize<Grid>(value);
-    }
-
     public Game(Player host)
     {
         Host = host;

@@ -1,4 +1,4 @@
-﻿using Blaze4Backend.Models;
+﻿using Blaze4Shared.Models;
 
 namespace Blaze4.Tests.UnitTests.Models
 {

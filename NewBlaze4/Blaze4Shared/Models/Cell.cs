@@ -1,4 +1,4 @@
-﻿namespace Blaze4Backend.Models;
+﻿namespace Blaze4Shared.Models;
 
 public class Cell
 {

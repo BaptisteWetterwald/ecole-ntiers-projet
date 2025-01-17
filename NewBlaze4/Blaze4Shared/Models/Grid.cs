@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Blaze4Backend.Models;
+namespace Blaze4Shared.Models;
 
 public class Grid
 {
