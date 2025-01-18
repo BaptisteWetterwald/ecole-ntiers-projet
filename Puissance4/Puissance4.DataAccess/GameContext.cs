@@ -7,10 +7,13 @@ namespace Puissance4.DataAccess
         public DbSet<Player> Players { get; set; }
         public DbSet<Game> Games { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlite("Data Source=puissance4.db");
-        }
+        // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        // {
+        //     optionsBuilder.UseSqlite("Data Source=puissance4.db");
+        // }
+        
+        public GameContext(DbContextOptions<GameContext> options) : base(options) { }
+        
     }
 
     public class Player
