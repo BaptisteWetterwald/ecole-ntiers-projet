@@ -1,32 +1,158 @@
-﻿@inject HttpClient Http
+﻿@page "/games"
+@attribute [StreamRendering]
 
-<h3>Liste des parties</h3>
+<PageTitle>Games</PageTitle>
 
-@if (games == null)
+<h1>Games</h1>
+
+<p>This component displays a list of ongoing Connect Four games.</p>
+
+<h2>Global Games</h2>
+@if (globalGames == null)
 {
-    <p>Chargement...</p>
+    <p><em>Loading...</em></p>
+}
+else if (!globalGames.Any())
+{
+    <p>No games available.</p>
 }
 else
 {
-    <ul>
-        @foreach (var game in games)
-        {
-            <li>Partie @game.Id - État : @game.State</li>
-        }
-    </ul>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Game ID</th>
+                <th>Game Name</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var game in globalGames)
+            {
+                <tr>
+                    <td>@game.GameId</td>
+                    <td>@game.GameName</td>
+                    <td>@game.Status</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<h2>Your Games</h2>
+@if (userGames == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (!userGames.Any())
+{
+    <p>You are not in any games currently.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Game ID</th>
+                <th>Game Name</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var game in userGames)
+            {
+                <tr>
+                    <td>@game.GameId</td>
+                    <td>@game.GameName</td>
+                    <td>@game.Status</td>
+                    <td>
+                        <button class="btn btn-primary btn-sm" @onclick="() => NavigateToGame(game.GameId)">Play</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<div class="mt-3">
+    <button class="btn btn-primary" @onclick="OpenModal">Create New Game</button>
+    <button class="btn btn-secondary" @onclick="JoinGame">Join a Game</button>
+</div>
+
+<!-- Modal -->
+@if (isModalOpen)
+{
+    <div class="modal-backdrop">
+        <div class="modal">
+            <div class="modal-header">
+                <h5 class="modal-title">Create New Game</h5>
+                <button class="btn-close" @onclick="CloseModal"></button>
+            </div>
+            <div class="modal-body">
+                <p>This is a simple modal. Add content here as needed.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" @onclick="CloseModal">Close</button>
+            </div>
+        </div>
+    </div>
 }
 
 @code {
-    private List<Game> games;
+    private List<Game>? globalGames;
+    private List<Game>? userGames;
+    private bool isModalOpen = false;
 
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = default!;
+
+    
     protected override async Task OnInitializedAsync()
     {
-        games = await Http.GetFromJsonAsync<List<Game>>("Game");
+        // Simulate loading data asynchronously
+        await Task.Delay(500);
+
+        // Mock data for demonstration
+        globalGames = new List<Game>
+        {
+            new Game { GameId = "1", GameName = "MyGame", Status = "Waiting for players" },
+            new Game { GameId = "2", GameName = "I'll win", Status = "In progress" },
+        };
+
+        userGames = new List<Game>
+        {
+            new Game { GameId = "1", GameName = "The game ??", Status = "Waiting for players" }
+        };
     }
 
-    public class Game
+    private void NavigateToGame(string gameId)
     {
-        public int Id { get; set; }
-        public string State { get; set; }
+        // Navigate to the game page with the game ID as a query parameter
+        NavigationManager.NavigateTo($"/game?gameId={gameId}");
+    }
+    
+    private void OpenModal()
+    {
+        Console.WriteLine("OpenModal called!");
+        isModalOpen = true;
+    }
+
+    private void CloseModal()
+    {
+        isModalOpen = false;
+    }
+
+    private void JoinGame()
+    {
+        // Logic for joining an existing game
+        Console.WriteLine("Joining a game...");
+    }
+
+    private class Game
+    {
+        public string GameId { get; set; } = string.Empty;
+        public string GameName { get; set; } = string.Empty;
+        public string Status { get; set; } = string.Empty;
     }
 }
