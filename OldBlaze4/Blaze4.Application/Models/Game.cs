@@ -1,4 +1,6 @@
-﻿namespace Blaze4.Application.Models;
+﻿using System.Text.Json;
+
+namespace Blaze4.Application.Models;
 
 public class Game
 {
@@ -16,6 +18,17 @@ public class Game
     public string Status { get; private set; } = Statuses.AwaitingGuest;
     public Player? Winner { get; private set; }
     public Player? CurrentTurn { get; private set; }
+    
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid HostId { get; set; }
+    public Guid? GuestId { get; set; }
+    
+    // Entity Framework needs a serializer
+    public string GridJson
+    {
+        get => JsonSerializer.Serialize(Grid);
+        set => Grid = JsonSerializer.Deserialize<Grid>(value);
+    }
 
     public Game(Player host)
     {

@@ -6,9 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Blaze4.Domain\Blaze4.Domain.csproj" />
-    <ProjectReference Include="..\Blaze4.Infrastructure\Blaze4.Infrastructure.csproj" />
-  </ItemGroup>
-
 </Project>

@@ -1,88 +1,61 @@
-﻿/*
-using Blaze4.Application.Models;
+﻿using Blaze4.Application.Interfaces;
 
-namespace Blaze4.Application.Services
+namespace Blaze4.Application.Services;
+
+using Blaze4.Domain.Models;
+using Blaze4.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+
+public class GameService : IGameService
 {
-    public class GameService
+    private readonly Blaze4DbContext _dbContext;
+
+    public GameService(Blaze4DbContext dbContext)
     {
-        private readonly List<Game> _games = new();
+        _dbContext = dbContext;
+    }
 
-        // Créer une nouvelle partie
-        public Game CreateGame(Player host)
-        {
-            var game = new Game
-            {
-                Host = host,
-                Status = Game.AwaitingGuest,
-                Grid = new Grid()
-            };
+    public async Task<Guid> CreateGameAsync(Guid hostId)
+    {
+        var host = await _dbContext.Players.FindAsync(hostId);
+        if (host == null) throw new Exception("Host player not found.");
 
-            _games.Add(game);
-            return game;
-        }
+        var game = new Game(host);
+        await _dbContext.Games.AddAsync(game);
+        await _dbContext.SaveChangesAsync();
 
-        // Récupérer les parties en attente d'invité
-        public List<Game> GetGamesAwaitingGuest()
-        {
-            return _games.Where(g => g.Status == Game.AwaitingGuest).ToList();
-        }
+        return game.Id;
+    }
 
-        // Permettre à un invité de rejoindre une partie existante
-        public Game? JoinGame(Player guest, Guid gameId)
-        {
-            var game = _games.FirstOrDefault(g => g.Id == gameId);
-            if (game == null || game.Guest != null)
-                return null;
+    public async Task JoinGameAsync(Guid gameId, Guid guestId)
+    {
+        var game = await _dbContext.Games
+            .Include(g => g.Guest)
+            .FirstOrDefaultAsync(g => g.Id == gameId);
+        if (game == null) throw new Exception("Game not found.");
 
-            game.JoinGame(guest);
-            return game;
-        }
+        var guest = await _dbContext.Players.FindAsync(guestId);
+        if (guest == null) throw new Exception("Guest player not found.");
 
-        // Récupérer les parties auxquelles un joueur a participé
-        public List<Game> GetPlayerGames(Player player)
-        {
-            return _games.Where(g => g.Host == player || g.Guest == player).ToList();
-        }
+        game.JoinGame(guest);
+        _dbContext.Games.Update(game);
+        await _dbContext.SaveChangesAsync();
+    }
 
-        // Récupérer les parties en cours qui attendent une action du joueur
-        public List<Game> GetGamesAwaitingPlayerAction(Player player)
-        {
-            return _games.Where(g =>
-                g.Status == Game.InProgress &&
-                ((g.Host == player || g.Guest == player) && 
-                (g.IsPlayerTurn(player) && !g.Grid.IsFull()) || !g.CheckWinCondition())).ToList();
-        }
+    public async Task PlayMoveAsync(Guid gameId, Guid playerId, int column)
+    {
+        var game = await _dbContext.Games
+            .Include(g => g.Grid)
+            .ThenInclude(grid => grid.Cells)
+            .FirstOrDefaultAsync(g => g.Id == gameId);
 
-        // Gérer un tour de jeu
-        public string PlayTurn(Guid gameId, Player player, int column)
-        {
-            var game = _games.FirstOrDefault(g => g.Id == gameId);
-            if (game == null)
-                return "Game not found.";
-            
-            if (!game.IsPlayerTurn(player))
-                return "It's not your turn.";
+        if (game == null) throw new Exception("Game not found.");
+        var player = await _dbContext.Players.FindAsync(playerId);
+        if (player == null) throw new Exception("Player not found.");
 
-            if (game.Grid.IsFull())
-                return "The grid is full.";
+        game.PlayTurn(player, column);
 
-            game.PlayTurn(player, column);
-
-            if (game.Status == Game.Finished)
-                return "Game finished.";
-            
-            return "Turn played.";
-        }
-        
-        public Game StartGame(Guid gameId)
-        {
-            var game = _games.FirstOrDefault(g => g.Id == gameId);
-            if (game == null)
-                throw new InvalidOperationException("Game not found.");
-            
-            game.StartGame();
-            return game;
-        }
+        _dbContext.Games.Update(game);
+        await _dbContext.SaveChangesAsync();
     }
 }
-*/

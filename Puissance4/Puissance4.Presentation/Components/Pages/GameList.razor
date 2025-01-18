@@ -1,0 +1,32 @@
+﻿@inject HttpClient Http
+
+<h3>Liste des parties</h3>
+
+@if (games == null)
+{
+    <p>Chargement...</p>
+}
+else
+{
+    <ul>
+        @foreach (var game in games)
+        {
+            <li>Partie @game.Id - État : @game.State</li>
+        }
+    </ul>
+}
+
+@code {
+    private List<Game> games;
+
+    protected override async Task OnInitializedAsync()
+    {
+        games = await Http.GetFromJsonAsync<List<Game>>("Game");
+    }
+
+    public class Game
+    {
+        public int Id { get; set; }
+        public string State { get; set; }
+    }
+}

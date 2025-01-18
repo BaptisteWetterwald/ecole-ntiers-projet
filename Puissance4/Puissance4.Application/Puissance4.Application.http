@@ -1,0 +1,6 @@
+@Puissance4.Application_HostAddress = http://localhost:5272
+
+GET {{Puissance4.Application_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
