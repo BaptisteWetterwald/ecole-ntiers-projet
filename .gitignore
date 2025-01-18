@@ -27,7 +27,7 @@ ScaffoldingReadMe.txt
 .vscode/
 
 # ASP.NET Core
-wwwroot/
+#wwwroot/
 *.dat
 
 # JetBrains Rider
