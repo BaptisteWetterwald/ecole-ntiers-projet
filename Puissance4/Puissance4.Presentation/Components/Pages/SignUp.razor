@@ -1,0 +1,58 @@
+﻿@page "/signup"
+
+<h3>Sign Up</h3>
+
+<div class="login-container">
+    <form class="login-form" @onsubmit="HandleSignUp">
+        <!-- Username -->
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input id="username" type="text" class="form-control" @bind="Username" placeholder="Enter your username" required />
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input id="email" type="email" class="form-control" @bind="Email" placeholder="Enter your email address" required />
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input id="password" type="password" class="form-control" @bind="Password" placeholder="Enter your password" required />
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="form-group">
+            <label for="confirm-password">Confirm Password</label>
+            <input id="confirm-password" type="password" class="form-control" @bind="ConfirmPassword" placeholder="Confirm your password" required />
+        </div>
+
+        <!-- Sign Up Button -->
+        <button type="submit" class="btn btn-primary btn-login">Sign Up</button>
+    </form>
+
+    <!-- Optional: Link to login page -->
+    <p class="signup-link">
+        Already have an account? <a href="/login">Log in</a>
+    </p>
+</div>
+
+@code {
+    private string Username { get; set; }
+    private string Email { get; set; }
+    private string Password { get; set; }
+    private string ConfirmPassword { get; set; }
+
+    private void HandleSignUp()
+    {
+        if (Password != ConfirmPassword)
+        {
+            Console.WriteLine("Passwords do not match!");
+            return;
+        }
+
+        Console.WriteLine($"Username: {Username}, Email: {Email}");
+        // Add sign-up logic here (e.g., API call to create user)
+    }
+}   
