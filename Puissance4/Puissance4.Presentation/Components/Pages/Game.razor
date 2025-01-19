@@ -9,10 +9,10 @@
 
         <!-- Game Board -->
         <div class="game-board">
-            @for (int row = 0; row < 6; row++)
+            @for (int row = 0; row < 7; row++)
             {
                 <div class="row">
-                    @for (int col = 0; col < 7; col++)
+                    @for (int col = 0; col < 6; col++)
                     {
                         <div class="cell"
                              @onclick="() => PlaceToken(col)"
@@ -30,7 +30,7 @@
 </div>
 
 @code {
-    private string[,] board = new string[6, 7]; // Board state
+    private string[,] board = new string[7, 6]; // Board state
     private string currentPlayer = "Red"; // Current player's color
     private bool isDarkTheme = false; // Theme state
 
