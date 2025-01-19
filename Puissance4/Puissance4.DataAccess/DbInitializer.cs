@@ -1,9 +1,11 @@
-﻿namespace Puissance4.DataAccess;
+﻿using Puissance4.DataAccess.Entities;
+
+namespace Puissance4.DataAccess;
 
 // Add sample data to the database
 public static class DbInitializer
 {
-    public static void Initialize(GameContext context)
+    public static void Initialize(Puissance4DbContext context)
     {
         context.Database.EnsureCreated();
 
@@ -15,24 +17,12 @@ public static class DbInitializer
 
         var players = new Player[]
         {
-            new Player{Username="Alice"},
-            new Player{Username="Bob"},
-            new Player{Username="Charlie"},
-            new Player{Username="David"},
-            new Player{Username="Eve"},
-            new Player{Username="Frank"},
-            new Player{Username="Grace"},
-            new Player{Username="Heidi"},
-            new Player{Username="Ivan"},
-            new Player{Username="Judy"},
-            new Player{Username="Mallory"},
-            new Player{Username="Oscar"},
-            new Player{Username="Peggy"},
-            new Player{Username="Sybil"},
-            new Player{Username="Trent"},
-            new Player{Username="Walter"}
+            new(){Username= "Alice"},
+            new(){Username= "Bob"},
+            new(){Username= "Charlie"},
+            new(){Username = "David"},
         };
-        foreach (Player p in players)
+        foreach (var p in players)
         {
             context.Players.Add(p);
         }
@@ -40,14 +30,25 @@ public static class DbInitializer
 
         var games = new Game[]
         {
-            new Game(){State="Empty",CreatedAt=DateTime.UtcNow},
-            new Game(){State="Empty",CreatedAt=DateTime.UtcNow},
+            new(){State="Empty",CreatedAt=DateTime.UtcNow},
+            new(){State="Empty",CreatedAt=DateTime.UtcNow},
         };
-        foreach (Game g in games)
+        foreach (var g in games)
         {
             context.Games.Add(g);
         }
 
+        var tokens = new TokenEntity[]
+        {
+            new(){Color="Red"},
+            new(){Color="Yellow"},
+            new(){Color="Red"},
+        };
+        foreach (var t in tokens)
+        {
+            context.Tokens.Add(t);
+        }
+        
         context.SaveChanges();
     }
 }

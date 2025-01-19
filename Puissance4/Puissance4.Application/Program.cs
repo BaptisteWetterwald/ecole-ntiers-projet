@@ -1,9 +1,11 @@
+using Puissance4.Application.Services;
 using Puissance4.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Ajouter la configuration DataAccess
 builder.Services.AddDataAccess(builder.Configuration.GetConnectionString("DefaultConnection")); // "Data Source=../Puissance4.DataAccess/puissance4.db"
+builder.Services.AddScoped<TokenService>();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -21,7 +23,7 @@ if (app.Environment.IsDevelopment())
 // Initialiser la base de données avec des données de test
 using (var scope = app.Services.CreateScope())
 {
-    var context = scope.ServiceProvider.GetRequiredService<GameContext>();
+    var context = scope.ServiceProvider.GetRequiredService<Puissance4DbContext>();
     DbInitializer.Initialize(context);
 }
 

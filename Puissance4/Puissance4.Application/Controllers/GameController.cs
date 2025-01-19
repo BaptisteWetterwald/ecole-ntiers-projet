@@ -7,9 +7,9 @@ namespace Puissance4.Application.Controllers
     [Route("api/[controller]")]
     public class GameController : ControllerBase
     {
-        private readonly GameContext _context;
+        private readonly Puissance4DbContext _context;
 
-        public GameController(GameContext context)
+        public GameController(Puissance4DbContext context)
         {
             _context = context;
         }

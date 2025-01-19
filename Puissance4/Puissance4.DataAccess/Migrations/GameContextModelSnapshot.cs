@@ -9,7 +9,7 @@ using Puissance4.DataAccess;
 
 namespace Puissance4.DataAccess.Migrations
 {
-    [DbContext(typeof(GameContext))]
+    [DbContext(typeof(Puissance4DbContext))]
     partial class GameContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
