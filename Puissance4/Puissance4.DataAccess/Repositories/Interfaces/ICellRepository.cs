@@ -2,7 +2,8 @@
 
 namespace Puissance4.DataAccess.Repositories.Interfaces;
 
-public interface ICellRepository
+public interface ICellRepository : IRepository<CellEntity>
 {
-    CellEntity GetById(int id);
+    Task<IEnumerable<CellEntity>> GetCellsByGridIdAsync(int gridId);
+    Task<CellEntity?> GetCellAt(int gridId, int row, int column);
 }

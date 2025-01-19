@@ -2,9 +2,6 @@
 
 namespace Puissance4.DataAccess.Repositories.Interfaces;
 
-public interface ITokenRepository
+public interface ITokenRepository : IRepository<TokenEntity>
 {
-    TokenEntity GetById(int id);
-    void Add(TokenEntity token);
-    void SaveChanges();
 }

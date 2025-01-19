@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using Puissance4.DataAccess.Entities;
 using Puissance4.DataAccess.Repositories.Interfaces;
 
@@ -13,10 +14,46 @@ public class CellRepository : ICellRepository
         _context = context;
     }
 
-    public CellEntity GetById(int id)
+    public async Task<CellEntity?> GetByIdAsync(int id)
     {
-        CellEntity? cell = _context.Cells.FirstOrDefault(c => c.Id == id);
-        if (cell == null) throw new Exception("No cell found with ID " + id);
-        return cell;
+        return await _context.Cells.FindAsync(id);
+    }
+
+    public async Task<IEnumerable<CellEntity>> GetAllAsync()
+    {
+        return await _context.Cells.ToListAsync();
+    }
+
+    public async Task AddAsync(CellEntity cell)
+    {
+        await _context.Cells.AddAsync(cell);
+    }
+
+    public void Update(CellEntity cell)
+    {
+        _context.Cells.Update(cell);
+    }
+
+    public void Delete(CellEntity cell)
+    {
+        _context.Cells.Remove(cell);
+    }
+
+    public async Task<IEnumerable<CellEntity>> GetCellsByGridIdAsync(int gridId)
+    {
+        return await _context.Cells
+            .Where(c => c.GridId == gridId)
+            .ToListAsync();
+    }
+
+    public async Task<CellEntity?> GetCellAt(int gridId, int row, int column)
+    {
+        return await _context.Cells
+            .FirstOrDefaultAsync(c => c.GridId == gridId && c.Row == row && c.Column == column);
+    }
+
+    public async Task SaveChangesAsync()
+    {
+        await _context.SaveChangesAsync();
     }
 }

@@ -6,5 +6,5 @@ public class PlayerEntity
     public string Login { get; set; }
     public string PasswordHash { get; set; }
     //public List<int> GamesIds { get; set; }
-    public List<GameEntity> Games { get; set; }
+    public List<GameEntity> Games { get; set; } = new();
 }

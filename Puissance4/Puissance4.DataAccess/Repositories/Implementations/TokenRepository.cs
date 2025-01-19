@@ -1,4 +1,5 @@
-﻿using Puissance4.DataAccess.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Puissance4.DataAccess.Entities;
 using Puissance4.DataAccess.Repositories.Interfaces;
 
 namespace Puissance4.DataAccess.Repositories.Implementations;
@@ -13,13 +14,33 @@ public class TokenRepository : ITokenRepository
         _context = context;
     }
     
-    public TokenEntity GetById(int id)
+    public async Task<TokenEntity?> GetByIdAsync(int id)
     {
-        return _context.Set<TokenEntity>().FirstOrDefault(t => t.Id == id);
+        return await _context.Tokens.FindAsync(id);
     }
 
-    public void Add(TokenEntity token)
+    public async Task<IEnumerable<TokenEntity>> GetAllAsync()
     {
-        _context.Set<TokenEntity>().Add(token);
+        return await _context.Tokens.ToListAsync();
+    }
+
+    public async Task AddAsync(TokenEntity token)
+    {
+        await _context.Tokens.AddAsync(token);
+    }
+
+    public void Update(TokenEntity token)
+    {
+        _context.Tokens.Update(token);
+    }
+
+    public void Delete(TokenEntity token)
+    {
+        _context.Tokens.Remove(token);
+    }
+
+    public async Task SaveChangesAsync()
+    {
+        await _context.SaveChangesAsync();
     }
 }

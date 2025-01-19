@@ -2,9 +2,8 @@
 
 namespace Puissance4.DataAccess.Repositories.Interfaces;
 
-public interface IPlayerRepository
+public interface IPlayerRepository : IRepository<PlayerEntity>
 {
-    void AddPlayer(PlayerEntity player);
-    PlayerEntity GetPlayerByLogin(string login);
-    void SaveChanges();
+    Task<PlayerEntity?> GetByLoginAsync(string login);
+    Task<IEnumerable<GameEntity>> GetPlayerGamesAsync(int playerId);
 }
