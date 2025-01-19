@@ -28,16 +28,19 @@ public class GameService
 
     public object? CreateGame(int hostId)
     {
+        Console.WriteLine("GameService: CreateGame(" + hostId + ")");
         throw new NotImplementedException();
     }
 
     public object? JoinGame(int id, int guestId)
     {
+        Console.WriteLine("GameService: JoinGame(" + id + ", " + guestId + ")");
         throw new NotImplementedException();
     }
 
     public object? PlayTurn(int gameId, int playerId, int column)
     {
+        Console.WriteLine("GameService: PlayTurn(" + gameId + ", " + playerId + ", " + column + ")");
         throw new NotImplementedException();
     }
 }

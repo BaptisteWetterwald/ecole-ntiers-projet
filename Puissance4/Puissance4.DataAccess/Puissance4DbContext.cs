@@ -16,6 +16,8 @@ public class Puissance4DbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // Doc: https://learn.microsoft.com/fr-fr/ef/core/modeling/relationships/one-to-many#one-to-many-without-navigation-to-principal-and-with-shadow-foreign-key
+        
         // Configuration pour Token
         modelBuilder.Entity<TokenEntity>(entity =>
         {
@@ -29,23 +31,29 @@ public class Puissance4DbContext : DbContext
             entity.HasKey(c => c.Id);
             entity.Property(c => c.Row).IsRequired();
             entity.Property(c => c.Column).IsRequired();
+            // Jsp s'il faut rajouter le GridId (qui serait une foreign key ou si ça suffit si on le gère dans la config de Grid) 
             
             // Relation avec Token
             entity.HasOne(c => c.Token)
                 .WithOne()
-                .HasForeignKey<CellEntity>(c => c.TokenId)
-                .OnDelete(DeleteBehavior.SetNull); // Si un Token est supprimé, Cell reste sans Token
+                .HasForeignKey<TokenEntity>(t => t.CellId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
         
         // Configuration pour Grid
         modelBuilder.Entity<GridEntity>(entity =>
         {
             entity.HasKey(g => g.Id);
+            
+            // Idem, même question pour le GameId
+
+            entity.Property(g => g.Rows).IsRequired();
+            entity.Property(g => g.Columns).IsRequired();
 
             // Relation avec Cell
             entity.HasMany(g => g.Cells)
                 .WithOne()
-                .HasForeignKey(c =>c.Id)
+                .HasForeignKey(c =>c.GridId)
                 .OnDelete(DeleteBehavior.Cascade); // Suppression en cascade des Cells si une Grid est supprimée
         });
         
@@ -53,34 +61,34 @@ public class Puissance4DbContext : DbContext
         modelBuilder.Entity<GameEntity>(entity =>
         {
             entity.HasKey(g => g.Id);
-            entity.Property(g => g.Status).IsRequired();
+            entity.Property(g => g.Status).HasMaxLength(20).IsRequired();
 
             // Relation avec Grid
             entity.HasOne(g => g.Grid)
                 .WithOne()
-                .HasForeignKey<GameEntity>(g => g.GridId)
+                .HasForeignKey<GridEntity>(g => g.GameId)
                 .OnDelete(DeleteBehavior.Cascade);
             
             // Relation avec Host
             entity.HasOne(g => g.Host)
-                .WithOne()
-                .HasForeignKey<GameEntity>(g => g.HostId)
+                .WithMany(p => p.Games) // gros doute sur ce one to many
+                .HasForeignKey(g => g.HostId)
                 .OnDelete(DeleteBehavior.Restrict); // Empêche la suppression cascade de l'hôte
 
             entity.HasOne(g => g.Guest)
-                .WithOne()
-                .HasForeignKey<GameEntity>(g => g.GuestId)
+                .WithMany(p => p.Games)
+                .HasForeignKey(g => g.GuestId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasOne(g => g.CurrentTurn)
-                .WithOne()
-                .HasForeignKey<GameEntity>(g => g.CurrentTurn)
-                .OnDelete(DeleteBehavior.Restrict);
+                .WithMany(p => p.Games)
+                .HasForeignKey(g => g.Id)
+                .OnDelete(DeleteBehavior.Restrict); // Peut-être tester cascade si ça reste
             
             entity.HasOne(g => g.Winner)
-                .WithOne()
-                .HasForeignKey<GameEntity>(g => g.WinnerId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .WithMany(p => p.Games)
+                .HasForeignKey(g => g.Id)
+                .OnDelete(DeleteBehavior.Restrict); // Peut-être tester cascade si ça reste
         });
         
         // Configuration pour Player
@@ -90,10 +98,9 @@ public class Puissance4DbContext : DbContext
             entity.Property(e => e.Login).IsRequired();
             entity.Property(e => e.PasswordHash).IsRequired();
 
+            // Là, c'est la merde, je pense
             entity.HasMany(p => p.Games)
-                .WithOne()
-                .HasForeignKey(g => g.Id)
-                .OnDelete(DeleteBehavior.Cascade);
+                .WithMany();
         });
 
     }

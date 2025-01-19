@@ -13,11 +13,11 @@ public class GameEntity
     public int? GuestId { get; set; }
     public PlayerEntity? Guest { get; set; }
     
-    public required string Status { get; set; }
-    
     public int? WinnerId { get; set; }
     public PlayerEntity? Winner { get; set; }
     
     public int? CurrentTurnId { get; set; }
     public PlayerEntity? CurrentTurn { get; set; }
+    
+    public required string Status { get; set; }
 }
