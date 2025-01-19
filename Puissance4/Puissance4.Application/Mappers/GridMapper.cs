@@ -29,12 +29,30 @@ public static class GridMapper
         };
     }
 
-    public static Grid ToDomain(GridEntity gridEntity, Cell[,] cells)
+    /*public static Grid ToDomain(GridEntity gridEntity, Cell[,] cells)
     {
         var grid = new Grid(gridEntity.Rows, gridEntity.Columns)
         {
             Cells = cells
         };
         return grid;
+    }*/
+    
+    public static Grid ToDomain(GridEntity gridEntity)
+    {
+        // Initialiser un tableau 2D de cellules
+        var cells = new Cell[gridEntity.Rows, gridEntity.Columns];
+
+        // Mapper chaque CellEntity vers une Cell et remplir le tableau 2D
+        foreach (var cellEntity in gridEntity.Cells)
+        {
+            var cell = CellMapper.ToDomain(cellEntity, null);
+            cells[cellEntity.Row, cellEntity.Column] = cell;
+        }
+
+        return new Grid(gridEntity.Rows, gridEntity.Columns)
+        {
+            Cells = cells
+        };
     }
 }

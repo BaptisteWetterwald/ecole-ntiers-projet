@@ -14,7 +14,11 @@ public static class DbInitializer
         {
             return;   // DB has been seeded
         }
-
+        
+        // Add samples
+        
+        //
+        
         context.SaveChanges();
     }
 }

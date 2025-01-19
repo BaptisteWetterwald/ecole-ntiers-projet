@@ -7,39 +7,33 @@ namespace Puissance4.Application.Controllers;
 [Route("api/games")]
 public class GameController : ControllerBase
 {
-    private readonly CellService _cellService;
+    private readonly GameService _gameService;
 
-    public GameController(CellService cellService)
+    public GameController(GameService gameService)
     {
-        _cellService = cellService;
+        _gameService = gameService;
     }
 
-    [HttpGet("{id}")] // api/games/1
-    public IActionResult GetGameById(int id)
+    [HttpGet("create")]
+    public IActionResult CreateGame(int hostId)
     {
-        try
-        {
-            var token = _cellService.GetCellById(1);
-            return Ok(token);
-        }
-        catch (Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
+        var game = _gameService.CreateGame(hostId);
+        return Ok(game);
     }
     
-    [HttpGet] // api/games
-    public IActionResult Get(int id)
+    [HttpPost("{id}/join")]
+    public IActionResult JoinGame(int id, int guestId)
     {
-        try
-        {
-            var token = _cellService.GetCellById(1);
-            return Ok(token);
-        }
-        catch (Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
+        var game = _gameService.JoinGame(id, guestId);
+        return Ok(game);
     }
+
+    [HttpPost("{id}/play")]
+    public IActionResult PlayTurn(int id, int playerId, int column)
+    {
+        var game = _gameService.PlayTurn(id, playerId, column);
+        return Ok(game);
+    }
+    
 
 }

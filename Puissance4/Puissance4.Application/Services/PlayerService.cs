@@ -33,6 +33,23 @@ public class PlayerService
         // Mapper l'entité en modèle métier
         return PlayerMapper.ToDomain(playerEntity);
     }
+
+    public Player GetPlayerByLogin(string login)
+    {
+        var playerEntity = _playerRepository.GetPlayerByLogin(login);
+        if (playerEntity == null)
+        {
+            throw new Exception("Player not found.");
+        }
+        
+        // Mapper le PlayerEntity en Player en récupérant ses jeux via un repository
+        return PlayerMapper.ToDomain(
+            playerEntity,
+            getGamesForPlayer: playerId => _gameRepository.GetGamesForPlayer(playerEntity)
+                .Select(gameEntity => GameMapper.ToDomain(gameEntity, mapPlayer: PlayerMapper.ToDomainWithoutGames))
+                .ToList()
+        );
+    }
     
     
 }
