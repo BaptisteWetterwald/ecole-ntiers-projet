@@ -5,5 +5,6 @@ public class GridEntity
     public int Id { get; set; }
     public int Rows = 6;
     public int Columns = 7;
-    public int[,] CellsId { get; set; }
+    public List<CellEntity> Cells { get; set; } = new();
+    //public int[,] CellsId { get; set; }
 }

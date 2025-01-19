@@ -1,6 +1,6 @@
 ﻿using Puissance4.Application.Domain;
 using Puissance4.Application.Mappers;
-using Puissance4.DataAccess.Repositories;
+using Puissance4.DataAccess.Repositories.Interfaces;
 
 namespace Puissance4.Application.Services;
 
@@ -22,13 +22,8 @@ public class CellService
         if (cellEntity == null) throw new Exception("Cell not found.");
 
         // Récupérer le Token correspondant (si TokenId n'est pas nul)
-        Token? token = null;
-        if (cellEntity.TokenId.HasValue)
-        {
-            var tokenEntity = _tokenService.GetTokenById(cellEntity.TokenId.Value);
-            token = TokenMapper.ToDomain(tokenEntity);
-        }
-
+        Token? token = cellEntity.TokenId.HasValue ? _tokenService.GetTokenById(cellEntity.TokenId.Value) : null;
+        
         // Mapper l'entité en modèle métier
         return CellMapper.ToDomain(cellEntity, token);
     }

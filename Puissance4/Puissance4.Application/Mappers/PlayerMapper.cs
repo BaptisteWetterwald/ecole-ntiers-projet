@@ -7,12 +7,19 @@ public static class PlayerMapper
 {
     public static PlayerEntity ToEntity(Player player)
     {
-        var gamesIds = player.Games.Select(game => game.Id).ToList();
+        //var gamesIds = player.Games.Select(game => game.Id).ToList();
+
+        var games = new List<GameEntity>();
+        foreach (var game in player.Games)
+        {
+            games.Add(GameMapper.ToEntity(game));
+        }
+        
         return new PlayerEntity
         {
             Login = player.Login,
             PasswordHash = player.PasswordHash,
-            GamesIds = gamesIds
+            Games = games
         };
     }
     

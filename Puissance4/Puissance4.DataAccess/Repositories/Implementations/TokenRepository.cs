@@ -22,9 +22,4 @@ public class TokenRepository : ITokenRepository
     {
         _context.Set<TokenEntity>().Add(token);
     }
-
-    public void SaveChanges()
-    {
-        _context.SaveChanges();
-    }
 }

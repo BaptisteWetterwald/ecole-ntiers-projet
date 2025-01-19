@@ -11,11 +11,16 @@ public static class GameMapper
         {
             Id = game.Id,
             GridId = game.Grid.Id,
+            Grid = GridMapper.ToEntity(game.Grid),
             Status = game.Status,
             HostId = game.Host.Id,
+            Host = PlayerMapper.ToEntity(game.Host),
             GuestId = game.Guest?.Id,
+            Guest = game.Guest == null ? null : PlayerMapper.ToEntity(game.Guest),
             WinnerId = game.Winner?.Id,
-            CurrentTurnId = game.CurrentTurn?.Id
+            Winner = game.Winner == null ? null : PlayerMapper.ToEntity(game.Winner),
+            CurrentTurnId = game.CurrentTurn?.Id,
+            CurrentTurn = game.CurrentTurn == null ? null : PlayerMapper.ToEntity(game.CurrentTurn)
         };
     }
     

@@ -5,5 +5,4 @@ namespace Puissance4.DataAccess.Repositories.Interfaces;
 public interface ICellRepository
 {
     CellEntity GetById(int id);
-    void SaveChanges();
 }

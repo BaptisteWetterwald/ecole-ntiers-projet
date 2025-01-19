@@ -1,37 +1,45 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Puissance4.DataAccess;
+using Puissance4.Application.Services;
 
-namespace Puissance4.Application.Controllers
+namespace Puissance4.Application.Controllers;
+
+[ApiController]
+[Route("api/games")]
+public class GameController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class GameController : ControllerBase
+    private readonly CellService _cellService;
+
+    public GameController(CellService cellService)
     {
-        private readonly Puissance4DbContext _context;
+        _cellService = cellService;
+    }
 
-        public GameController(Puissance4DbContext context)
+    [HttpGet("{id}")] // api/games/1
+    public IActionResult GetGameById(int id)
+    {
+        try
         {
-            _context = context;
+            var token = _cellService.GetCellById(1);
+            return Ok(token);
         }
-
-        [HttpGet]
-        public IActionResult GetGames()
+        catch (Exception ex)
         {
-            var games = _context.Games.ToList();
-            return Ok(games);
-        }
-
-        [HttpPost]
-        public IActionResult CreateGame()
-        {
-            var newGame = new Game
-            {
-                State = "Empty",
-                CreatedAt = DateTime.UtcNow
-            };
-            _context.Games.Add(newGame);
-            _context.SaveChanges();
-            return Ok(newGame);
+            return NotFound(ex.Message);
         }
     }
+    
+    [HttpGet] // api/games
+    public IActionResult Get(int id)
+    {
+        try
+        {
+            var token = _cellService.GetCellById(1);
+            return Ok(token);
+        }
+        catch (Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
+
 }

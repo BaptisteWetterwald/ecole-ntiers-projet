@@ -1,4 +1,5 @@
-﻿using Puissance4.DataAccess.Entities;
+﻿using Microsoft.Data.Sqlite;
+using Puissance4.DataAccess.Entities;
 using Puissance4.DataAccess.Repositories.Interfaces;
 
 namespace Puissance4.DataAccess.Repositories.Implementations;
@@ -14,11 +15,8 @@ public class CellRepository : ICellRepository
 
     public CellEntity GetById(int id)
     {
-        return _context.Cells.FirstOrDefault(c => c.Id == id);
-    }
-
-    public void SaveChanges()
-    {
-        _context.SaveChanges();
+        CellEntity? cell = _context.Cells.FirstOrDefault(c => c.Id == id);
+        if (cell == null) throw new Exception("No cell found with ID " + id);
+        return cell;
     }
 }

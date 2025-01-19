@@ -6,6 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Ajouter la configuration DataAccess
 builder.Services.AddDataAccess(builder.Configuration.GetConnectionString("DefaultConnection")); // "Data Source=../Puissance4.DataAccess/puissance4.db"
 builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<CellService>();
+builder.Services.AddScoped<GameService>();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
