@@ -7,8 +7,6 @@ namespace Puissance4.Application.Mappers;
 
 public static class CellMapper
 {
-    // use TokenService to get the token from the token repository
-    private static TokenService _tokenService;
     
     public static CellEntity ToEntity(Cell cell)
     {
