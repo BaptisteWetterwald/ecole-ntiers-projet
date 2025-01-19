@@ -92,34 +92,6 @@ h1:focus {
     padding: 1rem;
 }
 
-.game-board {
-    display: grid;
-    grid-template-rows: repeat(6, 60px); /* 6 rows */
-    grid-template-columns: repeat(7, 60px); /* 7 columns */
-    gap: 5px;
-    margin: 20px auto;
-}
-
-/* Rows */
-.row {
-    display: flex;
-}
-
-/* Cells */
-.cell {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%; /* Circular cells */
-    background-color: #f0f0f0; /* Default color */
-    border: 1px solid #ccc;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.cell:hover {
-    background-color: #dcdcdc; /* Hover effect */
-}
-
 /* Current Player Display */
 .current-player {
     font-size: 1.2em;
@@ -142,3 +114,80 @@ h1:focus {
     background-color: #218838;
 }
 
+.row {
+    display: contents; /* Permet d'utiliser grid sans div inutiles */
+}
+
+.cell[style*="red"] {
+    background-color: red; /* Remplace le rouge statique */
+}
+
+.cell[style*="yellow"] {
+    background-color: yellow; /* Remplace le jaune statique */
+}
+
+@keyframes drop {
+    from {
+        transform: translateY(-200px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.cell[style*="red"], .cell[style*="yellow"] {
+    animation: drop 0.5s ease-out;
+}
+
+.game-board {
+    display: grid;
+    grid-template-rows: repeat(6, 70px); /* 6 lignes de 70px */
+    grid-template-columns: repeat(7, 70px); /* 7 colonnes de 70px */
+    gap: 8px; /* Espacement entre les cellules */
+    justify-content: center;
+    align-items: center;
+    background-color: #333;
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+.cell {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%; /* Forme circulaire */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle, #222, #111);
+    border: 5px solid #444;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+.cell:hover {
+    transform: scale(1.15); /* Mise en avant plus visible */
+}
+
+.column-indicators {
+    display: grid;
+    grid-template-columns: repeat(7, 70px); /* Correspond à la taille des colonnes */
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.indicator {
+    text-align: center;
+    color: white;
+    font-size: 24px; /* Texte plus grand pour les indicateurs */
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.2s;
+}
+
+.indicator:hover {
+    color: lightblue;
+}
