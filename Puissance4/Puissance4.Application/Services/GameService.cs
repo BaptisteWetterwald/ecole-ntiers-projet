@@ -26,10 +26,20 @@ public class GameService
     }
 
 
-    public object? CreateGame(int hostId)
+    public async Task<Game> CreateGame(int hostId)
     {
         Console.WriteLine("GameService: CreateGame(" + hostId + ")");
-        throw new NotImplementedException();
+        Game game = new Game();
+        PlayerEntity? hostEntity = await _playerRepository.GetByLoginAsync("baptiste");
+        if (hostEntity == null) throw new Exception("Player not found");
+        
+        Player host = PlayerMapper.ToDomainWithoutGames(hostEntity);
+        game.Host = host;
+        game.Id = host.Id;
+        
+        await _gameRepository.AddAsync(GameMapper.ToEntity(game));
+        await _gameRepository.SaveChangesAsync();
+        return game;
     }
 
     public object? JoinGame(int id, int guestId)
