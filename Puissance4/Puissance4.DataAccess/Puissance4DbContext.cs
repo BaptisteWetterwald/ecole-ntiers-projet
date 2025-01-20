@@ -16,6 +16,90 @@ public class Puissance4DbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // Configuration de PlayerEntity
+        modelBuilder.Entity<PlayerEntity>(entity =>
+        {
+            entity.HasKey(p => p.Id);
+            entity.Property(p => p.Login).IsRequired().HasMaxLength(100);
+            entity.Property(p => p.PasswordHash).IsRequired();
+        });
+
+        // Configuration de GameEntity
+        modelBuilder.Entity<GameEntity>(entity =>
+        {
+            entity.HasKey(g => g.Id);
+            entity.Property(g => g.Status).IsRequired().HasMaxLength(20);
+
+            // Relation avec Grid
+            entity.HasOne(g => g.Grid)
+                .WithOne()
+                .HasForeignKey<GameEntity>(g => g.GridId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Relation avec Host
+            entity.HasOne(g => g.Host)
+                .WithMany()
+                .HasForeignKey(g => g.HostId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Relation avec Guest
+            entity.HasOne(g => g.Guest)
+                .WithMany()
+                .HasForeignKey(g => g.GuestId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Relation avec CurrentTurn
+            entity.HasOne(g => g.CurrentTurn)
+                .WithMany()
+                .HasForeignKey(g => g.CurrentTurnId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Relation avec Winner
+            entity.HasOne(g => g.Winner)
+                .WithMany()
+                .HasForeignKey(g => g.WinnerId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // Configuration de GridEntity
+        modelBuilder.Entity<GridEntity>(entity =>
+        {
+            entity.HasKey(g => g.Id);
+            entity.Property(g => g.Rows).IsRequired();
+            entity.Property(g => g.Columns).IsRequired();
+
+            // Relation avec Cell
+            entity.HasMany(g => g.Cells)
+                .WithOne()
+                .HasForeignKey(c => c.GridId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // Configuration de CellEntity
+        modelBuilder.Entity<CellEntity>(entity =>
+        {
+            entity.HasKey(c => c.Id);
+            entity.Property(c => c.Row).IsRequired();
+            entity.Property(c => c.Column).IsRequired();
+
+            // Relation avec Token
+            entity.HasOne(c => c.Token)
+                .WithOne()
+                .HasForeignKey<TokenEntity>(t => t.CellId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // Configuration de TokenEntity
+        modelBuilder.Entity<TokenEntity>(entity =>
+        {
+            entity.HasKey(t => t.Id);
+            entity.Property(t => t.Color).IsRequired().HasMaxLength(10);
+        });
+    }
+
+    
+    /*protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
         // Doc: https://learn.microsoft.com/fr-fr/ef/core/modeling/relationships/one-to-many#one-to-many-without-navigation-to-principal-and-with-shadow-foreign-key
         
         // Configuration pour Token
@@ -103,7 +187,7 @@ public class Puissance4DbContext : DbContext
                 .WithMany();
         });
 
-    }
+    }*/
     
 }
 
