@@ -10,11 +10,13 @@ public static class DataAccessConfiguration
     public static IServiceCollection AddDataAccess(this IServiceCollection services, string connectionString)
     {
         services.AddDbContext<Puissance4DbContext>(options =>
-            options.UseSqlite(connectionString)); // Utilise SQLite comme base de données
+            options.UseSqlite(connectionString)
+                .EnableSensitiveDataLogging()
+                .LogTo(Console.WriteLine)
+        ); // Utilise SQLite comme base de données
         
-        services.AddScoped<ITokenRepository, TokenRepository>();
-        /*services.AddScoped<ICellRepository, CellRepository>();
-        services.AddScoped<IGridRepository, GridRepository>();
+        services.AddScoped<ICellRepository, CellRepository>();
+        /*services.AddScoped<IGridRepository, GridRepository>();
         services.AddScoped<IGameRepository, GameRepository>();
         services.AddScoped<IPlayerRepository, PlayerRepository>();*/
 

@@ -9,7 +9,7 @@ public class Puissance4DbContext : DbContext
     //public DbSet<PlayerEntity> Players { get; set; }
     //public DbSet<GameEntity> Games { get; set; }
     //public DbSet<GridEntity> Grids { get; set; }
-    //public DbSet<CellEntity> Cells { get; set; }
+    public DbSet<CellEntity> Cells { get; set; }
     public DbSet<TokenEntity> Tokens { get; set; }
     
     public Puissance4DbContext(DbContextOptions<Puissance4DbContext> options) : base(options) { }
@@ -77,27 +77,32 @@ public class Puissance4DbContext : DbContext
         });
         */
 
-        /*
         // Configuration de CellEntity
         modelBuilder.Entity<CellEntity>(entity =>
         {
             entity.HasKey(c => c.Id);
+            entity.Property(c => c.Id).ValueGeneratedOnAdd();
             entity.Property(c => c.Row).IsRequired();
             entity.Property(c => c.Column).IsRequired();
 
             // Relation avec Token
             entity.HasOne(c => c.Token)
-                .WithOne()
+                .WithOne(t => t.Cell)
                 .HasForeignKey<TokenEntity>(t => t.CellId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
-        */
 
         // Configuration de TokenEntity
         modelBuilder.Entity<TokenEntity>(entity =>
         {
             entity.HasKey(t => t.Id);
+            entity.Property(t => t.Id).ValueGeneratedOnAdd();
             entity.Property(t => t.Color).IsRequired().HasMaxLength(10);
+            
+            // Relation avec Cell
+            entity.HasOne(t => t.Cell)
+                .WithOne(c => c.Token)
+                .HasForeignKey<TokenEntity>(t => t.CellId);
         });
     }
 
