@@ -9,23 +9,20 @@ public class GameService
 {
     /*private readonly IGameRepository _gameRepository;
     private readonly IPlayerRepository _playerRepository;
-    private readonly IGridRepository _gridRepository;
-    private readonly ICellRepository _cellRepository;*/
-    private readonly ITokenRepository _tokenRepository;
+    private readonly IGridRepository _gridRepository;*/
+    private readonly ICellRepository _cellRepository;
 
     public GameService(
         /*IGameRepository gameRepository,
         IPlayerRepository playerRepository,
-        IGridRepository gridRepository,
-        ICellRepository cellRepository,*/
-        ITokenRepository tokenRepository
+        IGridRepository gridRepository,*/
+        ICellRepository cellRepository
     )
     {
         /*_gameRepository = gameRepository;
         _playerRepository = playerRepository;
-        _gridRepository = gridRepository;
-        _cellRepository = cellRepository;*/
-        _tokenRepository = tokenRepository;
+        _gridRepository = gridRepository;*/
+        _cellRepository = cellRepository;
     }
 
 
@@ -66,17 +63,51 @@ public class GameService
         throw new NotImplementedException();
     }
 
-    public async Task<Token> Test()
+    public async Task<Cell> Test()
     {
         Console.WriteLine("GameService: Test()");
 
-        Token token = new Token("Red");
-        TokenEntity tokenEntity = TokenMapper.ToEntity(token);
-        await _tokenRepository.AddAsync(tokenEntity);
-        
-        await _tokenRepository.SaveChangesAsync();
+        var token = new Token("Red");
+        var cell = new Cell(1, 1)
+        {
+            Token = token
+        };
 
-        Console.WriteLine("Token ID is " + tokenEntity.Id);
-        return token;
+        // Mapper les entités
+        var cellEntity = CellMapper.ToEntity(cell);
+
+        // Ajouter la cellule et son token via _cellRepository
+        await _cellRepository.AddCellWithTokenAsync(cellEntity, cellEntity.Token);
+
+        // Mapper le résultat final en objet métier
+        var savedCell = CellMapper.ToDomain(cellEntity);
+
+        Console.WriteLine($"Saved Cell: ID={savedCell.Id}, Token={savedCell.Token?.Color}");
+        return savedCell;
     }
+    
+    // same but with the token directly in the cell
+    public async Task<Cell> Test2()
+    {
+        Console.WriteLine("GameService: Test2()");
+
+        var token = new Token("Red");
+        var cell = new Cell(2, 2)
+        {
+            Token = token
+        };
+
+        // Mapper les entités
+        var cellEntity = CellMapper.ToEntity(cell);
+
+        // Ajouter la cellule et son token via _cellRepository
+        await _cellRepository.AddCellWithTokenAsync(cellEntity);
+
+        // Mapper le résultat final en objet métier
+        var savedCell = CellMapper.ToDomain(cellEntity);
+
+        Console.WriteLine($"Saved Cell: ID={savedCell.Id}, Token={savedCell.Token?.Color}");
+        return savedCell;
+    }
+
 }

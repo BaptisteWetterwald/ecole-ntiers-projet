@@ -42,5 +42,12 @@ public class GameController : ControllerBase
         return Ok(item);
     }
     
+    [HttpGet("test2")]
+    public IActionResult Test2()
+    {
+        var item = _gameService.Test2();
+        return Ok(item);
+    }
+    
 
 }

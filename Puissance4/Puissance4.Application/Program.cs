@@ -4,7 +4,7 @@ using Puissance4.DataAccess;
 var builder = WebApplication.CreateBuilder(args);
 
 // Ajouter la configuration DataAccess
-builder.Services.AddDataAccess(builder.Configuration.GetConnectionString("DefaultConnection")); // "Data Source=../Puissance4.DataAccess/puissance4.db"
+builder.Services.AddDataAccess(builder.Configuration.GetConnectionString("DefaultConnection"));
 builder.Services.AddScoped<GameService>();
 builder.Services.AddScoped<AuthService>();
 

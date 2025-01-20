@@ -29,7 +29,7 @@ public static class GridMapper
         // Mapper chaque CellEntity vers une Cell et remplir le tableau 2D
         foreach (var cellEntity in gridEntity.Cells)
         {
-            var cell = CellMapper.ToDomain(cellEntity, null);
+            var cell = CellMapper.ToDomain(cellEntity);
             cells[cellEntity.Row, cellEntity.Column] = cell;
         }
 

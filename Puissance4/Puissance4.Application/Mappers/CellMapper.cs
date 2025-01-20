@@ -14,15 +14,17 @@ public static class CellMapper
         {
             Row = cell.Row,
             Column = cell.Column,
-            TokenId = cell.Token?.Id
+            TokenId = cell.Token?.Id,
+            Token = cell.Token != null ? TokenMapper.ToEntity(cell.Token) : null
         };
     }
 
-    public static Cell ToDomain(CellEntity cellEntity, Token? token)
+    public static Cell ToDomain(CellEntity cellEntity)
     {
         return new Cell(cellEntity.Row, cellEntity.Column)
         {
-            Token = token
+            Id = cellEntity.Id, // Récupère l'ID de la cellule
+            Token = cellEntity.Token != null ? TokenMapper.ToDomain(cellEntity.Token) : null // Mappe le Token si présent
         };
     }
 }
