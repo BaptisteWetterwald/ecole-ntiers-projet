@@ -7,4 +7,5 @@ public interface ICellRepository : IRepository<CellEntity>
     Task<IEnumerable<CellEntity>> GetCellsByGridIdAsync(int gridId);
     Task<CellEntity?> GetCellAt(int gridId, int row, int column);
     Task AddCellWithTokenAsync(CellEntity cellEntity, TokenEntity? tokenEntity);
+    Task AddCellWithTokenAsync(CellEntity cellEntity);
 }

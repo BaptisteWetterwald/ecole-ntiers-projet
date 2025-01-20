@@ -56,7 +56,7 @@ public class CellRepository : ICellRepository
             .Include(c => c.Token) // Inclure le Token pour charger les données liées
             .FirstOrDefaultAsync(c => c.GridId == gridId && c.Row == row && c.Column == column);
     }
-
+    
     public async Task AddCellWithTokenAsync(CellEntity cellEntity, TokenEntity? tokenEntity = null)
     {
         // Ajouter la cellule
@@ -65,33 +65,39 @@ public class CellRepository : ICellRepository
 
         if (tokenEntity != null)
         {
-            // Vérifier si un Token existe déjà pour cette cellule
-            var existingToken = await _context.Tokens.FirstOrDefaultAsync(t => t.CellId == cellEntity.Id);
+            // Associer le Token à la cellule
+            tokenEntity.CellId = cellEntity.Id;
 
+            // Ajouter ou mettre à jour le Token
+            var existingToken = await _context.Tokens.FirstOrDefaultAsync(t => t.CellId == cellEntity.Id);
             if (existingToken != null)
             {
-                // Mettre à jour le Token existant
                 existingToken.Color = tokenEntity.Color;
-                _context.Tokens.Update(existingToken);
             }
             else
             {
-                // Ajouter un nouveau Token
-                tokenEntity.CellId = cellEntity.Id;
-                tokenEntity.Id = 0;
                 await _context.Tokens.AddAsync(tokenEntity);
             }
 
             await _context.SaveChangesAsync();
-            
+
             // Mettre à jour la cellule avec le Token
             cellEntity.TokenId = tokenEntity.Id;
-            _context.Cells.Update(cellEntity);
-            
+            _context.Update(cellEntity);
+
             await _context.SaveChangesAsync();
         }
     }
 
+    public async Task AddCellWithTokenAsync(CellEntity cellEntity)
+    {
+        // Extraire le token s'il existe
+        var tokenEntity = cellEntity.Token;
+        cellEntity.Token = null; // Retirer la référence circulaire avant de passer à l'autre méthode
+
+        // Appeler la méthode principale
+        await AddCellWithTokenAsync(cellEntity, tokenEntity);
+    }
 
     public async Task SaveChangesAsync()
     {
