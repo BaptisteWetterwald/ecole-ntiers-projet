@@ -7,39 +7,51 @@ namespace Puissance4.Application.Services;
 
 public class GameService
 {
-    private readonly IGameRepository _gameRepository;
+    /*private readonly IGameRepository _gameRepository;
     private readonly IPlayerRepository _playerRepository;
     private readonly IGridRepository _gridRepository;
-    private readonly ICellRepository _cellRepository;
+    private readonly ICellRepository _cellRepository;*/
     private readonly ITokenRepository _tokenRepository;
 
     public GameService(
-        IGameRepository gameRepository,
+        /*IGameRepository gameRepository,
         IPlayerRepository playerRepository,
         IGridRepository gridRepository,
-        ICellRepository cellRepository,
+        ICellRepository cellRepository,*/
         ITokenRepository tokenRepository
     )
     {
-        _gameRepository = gameRepository;
+        /*_gameRepository = gameRepository;
         _playerRepository = playerRepository;
+        _gridRepository = gridRepository;
+        _cellRepository = cellRepository;*/
+        _tokenRepository = tokenRepository;
     }
 
 
     public async Task<Game> CreateGame(int hostId)
     {
+        /*
         Console.WriteLine("GameService: CreateGame(" + hostId + ")");
-        Game game = new Game();
         PlayerEntity? hostEntity = await _playerRepository.GetByLoginAsync("baptiste");
         if (hostEntity == null) throw new Exception("Player not found");
         
         Player host = PlayerMapper.ToDomainWithoutGames(hostEntity);
-        game.Host = host;
-        game.Id = host.Id;
+        Grid grid = new Grid(6, 7);
+        GridEntity gridEntity = GridMapper.ToEntity(grid);
         
+        await _gridRepository.AddAsync(gridEntity);
+        
+        Game game = new Game(host)
+        {
+            Grid = grid
+        };
+
         await _gameRepository.AddAsync(GameMapper.ToEntity(game));
         await _gameRepository.SaveChangesAsync();
         return game;
+        */
+        throw new NotImplementedException();
     }
 
     public object? JoinGame(int id, int guestId)
@@ -52,5 +64,19 @@ public class GameService
     {
         Console.WriteLine("GameService: PlayTurn(" + gameId + ", " + playerId + ", " + column + ")");
         throw new NotImplementedException();
+    }
+
+    public async Task<Token> Test()
+    {
+        Console.WriteLine("GameService: Test()");
+
+        Token token = new Token("Red");
+        TokenEntity tokenEntity = TokenMapper.ToEntity(token);
+        await _tokenRepository.AddAsync(tokenEntity);
+        
+        await _tokenRepository.SaveChangesAsync();
+
+        Console.WriteLine("Token ID is " + tokenEntity.Id);
+        return token;
     }
 }

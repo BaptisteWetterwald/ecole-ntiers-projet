@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿/*
+using Microsoft.EntityFrameworkCore;
 using Puissance4.DataAccess.Entities;
 using Puissance4.DataAccess.Repositories.Interfaces;
 
@@ -57,3 +58,4 @@ public class GameRepository : IGameRepository
         await _context.SaveChangesAsync();
     }
 }
+*/

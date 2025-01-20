@@ -34,6 +34,13 @@ public class GameController : ControllerBase
         var game = _gameService.PlayTurn(id, playerId, column);
         return Ok(game);
     }
+
+    [HttpGet("test")]
+    public IActionResult Test()
+    {
+        var item = _gameService.Test();
+        return Ok(item);
+    }
     
 
 }

@@ -1,5 +1,8 @@
-﻿namespace Puissance4.DataAccess.Entities;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
+namespace Puissance4.DataAccess.Entities;
+
+[NotMapped]
 public class CellEntity()
 {
     public int Id { get; set; }

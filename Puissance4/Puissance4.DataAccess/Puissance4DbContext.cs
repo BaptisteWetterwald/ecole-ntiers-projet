@@ -6,16 +6,17 @@ namespace Puissance4.DataAccess;
 
 public class Puissance4DbContext : DbContext
 {
-    public DbSet<PlayerEntity> Players { get; set; }
-    public DbSet<GameEntity> Games { get; set; }
-    public DbSet<GridEntity> Grids { get; set; }
-    public DbSet<CellEntity> Cells { get; set; }
+    //public DbSet<PlayerEntity> Players { get; set; }
+    //public DbSet<GameEntity> Games { get; set; }
+    //public DbSet<GridEntity> Grids { get; set; }
+    //public DbSet<CellEntity> Cells { get; set; }
     public DbSet<TokenEntity> Tokens { get; set; }
     
     public Puissance4DbContext(DbContextOptions<Puissance4DbContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        /*
         // Configuration de PlayerEntity
         modelBuilder.Entity<PlayerEntity>(entity =>
         {
@@ -74,7 +75,9 @@ public class Puissance4DbContext : DbContext
                 .HasForeignKey(c => c.GridId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
+        */
 
+        /*
         // Configuration de CellEntity
         modelBuilder.Entity<CellEntity>(entity =>
         {
@@ -88,6 +91,7 @@ public class Puissance4DbContext : DbContext
                 .HasForeignKey<TokenEntity>(t => t.CellId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
+        */
 
         // Configuration de TokenEntity
         modelBuilder.Entity<TokenEntity>(entity =>
@@ -190,16 +194,3 @@ public class Puissance4DbContext : DbContext
     }*/
     
 }
-
-    /*public class Player
-    {
-        public int Id { get; set; }
-        public string Username { get; set; }
-    }
-
-    public class Game
-    {
-        public int Id { get; set; }
-        public string State { get; set; }
-        public DateTime CreatedAt { get; set; }
-    }*/

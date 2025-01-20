@@ -10,7 +10,7 @@ public static class DbInitializer
         context.Database.EnsureCreated();
 
         // Look for any players.
-        if (context.Players.Any())
+        if (context.Tokens.Any())
         {
             return;   // DB has been seeded
         }
