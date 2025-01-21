@@ -33,4 +33,14 @@ public static class CellMapper
             TokenColor = cell.Token?.Color
         };
     }
+    
+    public static CellDto ToDto(EFCell entity)
+    {
+        return new CellDto
+        {
+            Row = entity.Row,
+            Column = entity.Column,
+            TokenColor = entity.Token?.Color
+        };
+    }
 }

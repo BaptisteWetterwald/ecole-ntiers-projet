@@ -1,5 +1,4 @@
-﻿/*
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Puissance4.Application.DTOs;
 using Puissance4.Application.Services;
 
@@ -17,15 +16,30 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public IActionResult Login([FromBody] LoginDto loginDto)
+    public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
     {
-        // Valide les informations d'identification
-        if (loginDto is { Username: "admin", Password: "password" }) // Remplace par ton service AuthService
+        var correctPwd = await _authService.VerifyPassword(loginDto);
+        if (!correctPwd)
         {
-            var token = _authService.GenerateToken(loginDto.Username);
-            return Ok(new { Token = token });
+            return Unauthorized();
         }
-        return Unauthorized();
+        
+        var token = await _authService.GenerateToken(loginDto.Username);
+        return Ok(new BearerTokenDto { Token = token });
+    }
+    
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] LoginDto loginDto)
+    {
+        await _authService.Register(loginDto);
+        var token = await _authService.GenerateToken(loginDto.Username);
+        return Ok(new BearerTokenDto { Token = token });
+    }
+    
+    [HttpPost("logout")]
+    public IActionResult Logout()
+    {
+        _authService.Logout();
+        return Ok();
     }
 }
-*/

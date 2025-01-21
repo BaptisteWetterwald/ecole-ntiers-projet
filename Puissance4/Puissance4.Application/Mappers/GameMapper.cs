@@ -8,11 +8,10 @@ public static class GameMapper
 {
     public static Game ToDomain(EFGame entity)
     {
-        return new Game
+        return new Game(PlayerMapper.ToDomain(entity.Host))
         {
             Id = entity.Id,
             Grid = GridMapper.ToDomain(entity.Grid),
-            Host = PlayerMapper.ToDomain(entity.Host),
             Guest = entity.Guest != null ? PlayerMapper.ToDomain(entity.Guest) : null,
             Winner = entity.Winner != null ? PlayerMapper.ToDomain(entity.Winner) : null,
             CurrentTurn = entity.CurrentTurn != null ? PlayerMapper.ToDomain(entity.CurrentTurn) : null,
@@ -44,6 +43,19 @@ public static class GameMapper
             Winner = game.Winner != null ? PlayerMapper.ToDto(game.Winner) : null,
             Status = game.Status,
             Grid = GridMapper.ToDto(game.Grid)
+        };
+    }
+    
+    public static GameDto ToDto(EFGame entity)
+    {
+        return new GameDto
+        {
+            Id = entity.Id,
+            Host = PlayerMapper.ToDto(entity.Host),
+            Guest = entity.Guest != null ? PlayerMapper.ToDto(entity.Guest) : null,
+            Winner = entity.Winner != null ? PlayerMapper.ToDto(entity.Winner) : null,
+            Status = entity.Status,
+            Grid = GridMapper.ToDto(entity.Grid)
         };
     }
 }

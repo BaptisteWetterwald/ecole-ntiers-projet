@@ -33,4 +33,13 @@ public static class PlayerMapper
             Login = player.Login
         };
     }
+    
+    public static PlayerDto ToDto(EFPlayer entity)
+    {
+        return new PlayerDto
+        {
+            Id = entity.Id,
+            Login = entity.Login
+        };
+    }
 }

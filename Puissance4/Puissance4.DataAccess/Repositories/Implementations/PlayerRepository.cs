@@ -14,4 +14,9 @@ public class PlayerRepository : Repository<EFPlayer>, IPlayerRepository
     {
         return _context.Players.FirstOrDefaultAsync(p => p.Login == login);
     }
+
+    public Task<EFPlayer?> GetByLoginAndPasswordAsync(string login, string hashedPassword)
+    {
+        return _context.Players.FirstOrDefaultAsync(p => p.Login == login && p.PasswordHash == hashedPassword);
+    }
 }

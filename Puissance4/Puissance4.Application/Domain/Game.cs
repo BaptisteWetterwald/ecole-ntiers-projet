@@ -10,26 +10,32 @@ public class Game
     }
     
     public int Id { get; set; }
-    public Grid Grid { get; set; } = new();
+    public Grid Grid { get; set; }
     public Player Host { get; set; }
     public Player? Guest { get; set; }
     public Player? Winner { get; set; }
     public Player? CurrentTurn { get; set; }
     public string Status { get; set; } = Statuses.AwaitingGuest;
     
-    public Game() { }
-    
     public Game(Player host)
     {
         Host = host;
         CurrentTurn = null;
+        Grid = new Grid
+        {
+            Rows = 6,
+            Columns = 7,
+            Cells = new Cell[6, 7]
+        };
     }
     
     public void JoinGame(Player guest)
     {
         if (Guest != null) throw new InvalidOperationException("A guest has already joined.");
+        if (guest == Host) throw new InvalidOperationException("Host cannot join their own game.");
         Guest = guest;
         CurrentTurn = Guest; // L'invité commence.
+        Status = Statuses.InProgress;
     }
     
     public void PlayTurn(Player player, int column)
@@ -58,11 +64,5 @@ public class Game
     private void SwitchTurn()
     {
         CurrentTurn = CurrentTurn == Host ? Guest : Host;
-    }
-
-    public void StartGame()
-    {
-        if (Guest == null) throw new InvalidOperationException("A guest must join before starting.");
-        Status = Statuses.InProgress;
     }
 }

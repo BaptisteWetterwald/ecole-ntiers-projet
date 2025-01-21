@@ -10,7 +10,7 @@ builder.Configuration.AddUserSecrets<Program>();
 builder.Services.AddDataAccess(builder.Configuration.GetConnectionString("DefaultConnection"));
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<GameService>();
-//builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<AuthService>();
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddAuthentication(options =>

@@ -16,10 +16,15 @@ public class GameRepository : Repository<EFGame>, IGameRepository
             .FirstOrDefaultAsync(g => g.Id == gameId);
     }
 
-    public async Task<IEnumerable<EFGame>> GetGamesByPlayerAsync(int playerId)
+    public async Task<IEnumerable<EFGame>> GetGamesOfPlayerAsync(int playerId)
     {
         return await _context.Games
             .Where(g => g.HostId == playerId || g.GuestId == playerId)
             .ToListAsync();
+    }
+
+    public Task<IEnumerable<EFGame>> GetPendingGames()
+    {
+        return Task.FromResult(_context.Games.Where(g => g.Status == EFGame.Statuses.AwaitingGuest).AsEnumerable());
     }
 }

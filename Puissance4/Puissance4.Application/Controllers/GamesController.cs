@@ -2,71 +2,72 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Puissance4.Application.DTOs;
-using Puissance4.Application.Mappers;
 using Puissance4.Application.Services;
 
 namespace Puissance4.Application.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/[controller]")]
-//[Authorize]
 public class GamesController : ControllerBase
 {
     private readonly GameService _gameService;
-    //private readonly AuthService _authService;
+    private readonly AuthService _authService;
 
-    public GamesController(GameService gameService/*, AuthService authService*/)
+    public GamesController(GameService gameService, AuthService authService)
     {
         _gameService = gameService;
-        //_authService = authService;
+        _authService = authService;
     }
     
     [HttpGet("{id:int}")]
     public async Task<ActionResult<GameDto>> GetGameById(int id)
     {
-        var game = await _gameService.GetGameById(id);
+        var gameDto = await _gameService.GetGameById(id);
 
-        if (game == null)
+        if (gameDto == null)
         {
             return NotFound();
         }
-
-        var gameDto = GameMapper.ToDto(game);
+        
         return Ok(gameDto);
     }
     
-
-    [HttpPost("create")]
-    public IActionResult CreateGame()
+    [HttpGet("pending")]
+    public async Task<ActionResult<IEnumerable<GameDto>>> GetPendingGames()
     {
-        var game = _gameService.CreateGame();
-        return Ok(game);
+        var games = await _gameService.GetPendingGames();
+        return Ok(games);
     }
     
-    [HttpPost("{id:int}/join")]
-    public IActionResult JoinGame(int id, int guestId)
+    [HttpGet("player")]
+    public async Task<ActionResult<IEnumerable<GameDto>>> GetGamesOfPlayer()
     {
-        var game = _gameService.JoinGame(id, guestId);
-        return Ok(game);
+        var playerId = _authService.GetUserId();
+        var games = await _gameService.GetGamesOfPlayer(playerId);
+        return Ok(games);
+    }
+
+    [HttpPost("create")]
+    public async Task<ActionResult<GameDto>> CreateGame()
+    {
+        var playerId = _authService.GetUserId();
+        var gameDto = await _gameService.CreateGame(playerId);
+        return Ok(gameDto);
+    }
+    
+    [HttpPost("{gameId:int}/join")]
+    public async Task<ActionResult<GameDto>> JoinGame(int gameId)
+    {
+        var playerId = _authService.GetUserId();
+        var gameDto = await _gameService.JoinGame(gameId, playerId);
+        return Ok(gameDto);
     }
 
     [HttpPost("{gameId:int}/play")]
-    public IActionResult PlayTurn(int gameId, int column)
+    public async Task<ActionResult<GameDto>> PlayTurn(int gameId, [FromBody] PlayTurnDto playTurnDto)
     {
-        /* Implémenter les repos avant de décommenter
-        var playerId = _authService.GetUserId();
-        if (string.IsNullOrEmpty(playerId.ToString()))
-            return Unauthorized("Player not authenticated.");
-        */
-        
-        try
-        {
-            var game = _gameService.PlayTurn(gameId, /*playerId*/0, column); // Appel au service métier
-            return Ok(game);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(new { Error = ex.Message });
-        }
+        var gameDto = await _gameService.PlayTurn(gameId, 0, playTurnDto.Column); // Remplacer 0 par l'ID du joueur connecté
+        return Ok(gameDto);
     }
 }
