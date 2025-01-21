@@ -8,7 +8,7 @@ public class GameRepository : Repository<EFGame>, IGameRepository
 {
     public GameRepository(Puissance4DbContext context) : base(context) { }
 
-    public async Task<EFGame> GetGameWithGridAsync(int gameId)
+    public async Task<EFGame?> GetGameWithGridAsync(int gameId)
     {
         return await _context.Games
             .Include(g => g.Grid)

@@ -4,7 +4,6 @@ namespace Puissance4.Application.Domain;
 
 public class Grid
 {
-    public int Id { get; set; }
     public int Rows = 6;
     public int Columns = 7;
     public Cell[,] Cells;

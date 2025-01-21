@@ -1,71 +1,36 @@
-﻿/*
 using Puissance4.Application.Domain;
+using Puissance4.Application.DTOs;
 using Puissance4.DataAccess.Entities;
 
 namespace Puissance4.Application.Mappers;
 
 public static class PlayerMapper
 {
-    public static PlayerEntity ToEntity(Player player)
+    public static Player ToDomain(EFPlayer entity)
     {
-        //var gamesIds = player.Games.Select(game => game.Id).ToList();
-
-        var games = new List<GameEntity>();
-        foreach (var game in player.Games)
+        return new Player
         {
-            games.Add(GameMapper.ToEntity(game));
-        }
-
-        return new PlayerEntity
-        {
-            Login = player.Login,
-            PasswordHash = player.PasswordHash,
-            Games = games
+            Id = entity.Id,
+            Login = entity.Login
         };
     }
 
-    public static Player ToDomain(PlayerEntity playerEntity, List<Game> games)
+    public static EFPlayer ToEntity(Player domain)
     {
-        var player = new Player(playerEntity.Login, playerEntity.PasswordHash)
+        return new EFPlayer
         {
-            Games = games
-        };
-        return player;
-    }
-}
-*/
-using Puissance4.Application.Domain;
-using Puissance4.DataAccess.Entities;
-
-namespace Puissance4.Application.Mappers;
-
-public static class PlayerMapper
-{
-    public static PlayerEntity ToEntity(Player player)
-    {
-        return new PlayerEntity
-        {
-            Login = player.Login,
-            PasswordHash = player.PasswordHash,
-            // On ne mappe pas les jeux eux-mêmes, seulement les IDs
-            Games = new List<GameEntity>() // Les jeux doivent être gérés ailleurs
+            Id = domain.Id,
+            Login = domain.Login,
+            PasswordHash = "" // Vous pouvez gérer cela ailleurs
         };
     }
-
-    public static Player ToDomain(PlayerEntity playerEntity, Func<int, List<Game>> getGamesForPlayer)
+    
+    public static PlayerDto ToDto(Player player)
     {
-        // Récupérer les jeux du joueur via la fonction `getGamesForPlayer`
-        var games = getGamesForPlayer(playerEntity.Id);
-
-        return new Player(playerEntity.Login, playerEntity.PasswordHash)
+        return new PlayerDto
         {
-            Games = games
+            Id = player.Id,
+            Login = player.Login
         };
-    }
-
-    public static Player ToDomainWithoutGames(PlayerEntity playerEntity)
-    {
-        // Mapper le joueur sans inclure ses jeux
-        return new Player(playerEntity.Login, playerEntity.PasswordHash);
     }
 }

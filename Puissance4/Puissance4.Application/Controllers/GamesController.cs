@@ -1,6 +1,8 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Puissance4.Application.DTOs;
+using Puissance4.Application.Mappers;
 using Puissance4.Application.Services;
 
 namespace Puissance4.Application.Controllers;
@@ -18,6 +20,21 @@ public class GamesController : ControllerBase
         _gameService = gameService;
         //_authService = authService;
     }
+    
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<GameDto>> GetGameById(int id)
+    {
+        var game = await _gameService.GetGameById(id);
+
+        if (game == null)
+        {
+            return NotFound();
+        }
+
+        var gameDto = GameMapper.ToDto(game);
+        return Ok(gameDto);
+    }
+    
 
     [HttpPost("create")]
     public IActionResult CreateGame()
@@ -51,12 +68,5 @@ public class GamesController : ControllerBase
         {
             return BadRequest(new { Error = ex.Message });
         }
-    }
-
-    [HttpGet("test")]
-    public IActionResult Test()
-    {
-        var item = _gameService.Test();
-        return Ok(item);
     }
 }

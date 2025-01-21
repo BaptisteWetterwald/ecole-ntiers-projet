@@ -1,4 +1,6 @@
-﻿using Puissance4.Application.Domain;
+﻿using Microsoft.AspNetCore.Mvc;
+using Puissance4.Application.Domain;
+using Puissance4.Application.DTOs;
 using Puissance4.Application.Mappers;
 using Puissance4.DataAccess.Entities;
 using Puissance4.DataAccess.Repositories.Interfaces;
@@ -71,50 +73,10 @@ public class GameService
         return null;
     }
 
-    public async Task Test()
+    public async Task<Game?> GetGameById(int id)
     {
-        Console.WriteLine("GameService: Test()");
-
-        var grid = new EFGrid
-        {
-            Rows = 6,
-            Columns = 7,
-            Cells = new List<EFCell>()
-        };
-
-        for (int row = 0; row < 6; row++)
-        {
-            for (int column = 0; column < 7; column++)
-            {
-                grid.Cells.Add(new EFCell
-                {
-                    Row = row,
-                    Column = column,
-                    Grid = grid // Associe chaque cellule à la grille
-                });
-            }
-        }
-
-        var player1 = new EFPlayer { Login = "Alice", PasswordHash = "hashedpassword1" };
-        var player2 = new EFPlayer { Login = "Bob", PasswordHash = "hashedpassword2" };
-
-        var game = new EFGame
-        {
-            Host = player1,
-            Guest = player2,
-            Grid = grid,
-            Status = "In Progress"
-        };
-
-        // context.Players.AddRange(player1, player2);
-        // context.Games.Add(game);
-        // context.SaveChanges();
+        var efGame = await _gameRepository.GetGameWithGridAsync(id);
         
-        await _playerRepository.AddAsync(player1);
-        await _playerRepository.AddAsync(player2);
-        await _gameRepository.AddAsync(game);
-        
-        Console.WriteLine("GameService: Test() - Game created");
+        return efGame == null ? null : GameMapper.ToDomain(efGame);
     }
-
 }

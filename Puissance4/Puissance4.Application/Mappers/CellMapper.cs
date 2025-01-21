@@ -1,30 +1,36 @@
-﻿using Puissance4.Application.Domain;
-using Puissance4.Application.Services;
+using Puissance4.Application.Domain;
+using Puissance4.Application.DTOs;
 using Puissance4.DataAccess.Entities;
-using Puissance4.DataAccess.Repositories.Interfaces;
 
 namespace Puissance4.Application.Mappers;
 
 public static class CellMapper
 {
-    
-    public static CellEntity ToEntity(Cell cell)
+    public static Cell ToDomain(EFCell entity)
     {
-        return new CellEntity
+        return new Cell(entity.Row, entity.Column)
         {
-            Row = cell.Row,
-            Column = cell.Column,
-            TokenId = cell.Token?.Id,
-            Token = cell.Token != null ? TokenMapper.ToEntity(cell.Token) : null
+            Token = entity.Token != null ? TokenMapper.ToDomain(entity.Token) : null
         };
     }
 
-    public static Cell ToDomain(CellEntity cellEntity)
+    public static EFCell ToEntity(Cell domain)
     {
-        return new Cell(cellEntity.Row, cellEntity.Column)
+        return new EFCell
         {
-            Id = cellEntity.Id, // Récupère l'ID de la cellule
-            Token = cellEntity.Token != null ? TokenMapper.ToDomain(cellEntity.Token) : null // Mappe le Token si présent
+            Row = domain.Row,
+            Column = domain.Column,
+            Token = domain.Token != null ? TokenMapper.ToEntity(domain.Token) : null
+        };
+    }
+    
+    public static CellDto ToDto(Cell cell)
+    {
+        return new CellDto
+        {
+            Row = cell.Row,
+            Column = cell.Column,
+            TokenColor = cell.Token?.Color
         };
     }
 }

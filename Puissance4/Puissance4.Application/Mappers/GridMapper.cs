@@ -1,53 +1,72 @@
-﻿using Puissance4.Application.Domain;
+using Puissance4.Application.Domain;
+using Puissance4.Application.DTOs;
+using Puissance4.Application.Mappers;
 using Puissance4.DataAccess.Entities;
-
-namespace Puissance4.Application.Mappers;
 
 public static class GridMapper
 {
-    public static GridEntity ToEntity(Grid grid)
+    // Conversion de EFGrid à Grid (remplit les cellules vides)
+    public static Grid ToDomain(EFGrid efGrid)
     {
-        // Créer une entité Grid
-        var gridEntity = new GridEntity
+        var grid = new Grid
         {
-            Rows = grid.Rows,
-            Columns = grid.Columns
+            Rows = efGrid.Rows,
+            Columns = efGrid.Columns,
+            Cells = new Cell[efGrid.Rows, efGrid.Columns]
         };
 
-        // Mapper chaque Cell vers une CellEntity
-        foreach (var cell in grid.Cells)
+        // Initialisation des cellules vides
+        for (int row = 0; row < grid.Rows; row++)
         {
-            var cellEntity = CellMapper.ToEntity(cell);
-            
-            // Don't map empty cells
-            if (cellEntity.Token == null)
+            for (int column = 0; column < grid.Columns; column++)
             {
-                continue;
+                grid.Cells[row, column] = new Cell(row, column)
+                {
+                    Token = null // Cellule vide par défaut
+                };
             }
-            
-            gridEntity.Cells.Add(cellEntity);
         }
 
-        Console.WriteLine($"GridMapper: ToEntity() - {gridEntity.Cells.Count} cells mapped");
+        // Remplissage des cellules avec un Token
+        foreach (var efCell in efGrid.Cells)
+        {
+            grid.Cells[efCell.Row, efCell.Column] = CellMapper.ToDomain(efCell);
+        }
 
-        return gridEntity;
+        return grid;
+    }
+
+    // Conversion de Grid à EFGrid (ignorer les cellules sans Token)
+    public static EFGrid ToEntity(Grid grid)
+    {
+        return new EFGrid
+        {
+            Rows = grid.Rows,
+            Columns = grid.Columns,
+            Cells = grid.Cells
+                .Cast<Cell>() // Convertir le tableau 2D en IEnumerable<Cell>
+                .Where(cell => cell.Token != null) // Ignorer les cellules sans Token
+                .Select(CellMapper.ToEntity) // Mapper vers EFCell
+                .ToList()
+        };
     }
     
-    public static Grid ToDomain(GridEntity gridEntity)
+    public static GridDto ToDto(Grid grid)
     {
-        // Initialiser un tableau 2D de cellules
-        var cells = new Cell[gridEntity.Rows, gridEntity.Columns];
-
-        // Mapper chaque CellEntity vers une Cell et remplir le tableau 2D
-        foreach (var cellEntity in gridEntity.Cells)
+        var cellsDto = new CellDto[grid.Rows, grid.Columns];
+        for (int row = 0; row < grid.Rows; row++)
         {
-            var cell = CellMapper.ToDomain(cellEntity);
-            cells[cellEntity.Row, cellEntity.Column] = cell;
+            for (int column = 0; column < grid.Columns; column++)
+            {
+                cellsDto[row, column] = CellMapper.ToDto(grid.Cells[row, column]);
+            }
         }
 
-        return new Grid
+        return new GridDto
         {
-            Cells = cells
+            Rows = grid.Rows,
+            Columns = grid.Columns,
+            Cells = cellsDto
         };
     }
 }

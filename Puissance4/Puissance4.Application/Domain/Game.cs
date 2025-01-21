@@ -10,12 +10,12 @@ public class Game
     }
     
     public int Id { get; set; }
+    public Grid Grid { get; set; } = new();
     public Player Host { get; set; }
     public Player? Guest { get; set; }
-    public Grid Grid { get; set; } = new();
-    public string Status { get; set; } = Statuses.AwaitingGuest;
     public Player? Winner { get; set; }
     public Player? CurrentTurn { get; set; }
+    public string Status { get; set; } = Statuses.AwaitingGuest;
     
     public Game() { }
     

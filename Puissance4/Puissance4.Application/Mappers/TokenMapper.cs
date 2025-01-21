@@ -1,18 +1,18 @@
-﻿using Puissance4.Application.Domain;
+using Puissance4.Application.Domain;
 using Puissance4.DataAccess.Entities;
 
 namespace Puissance4.Application.Mappers;
 
 public static class TokenMapper
 {
-    public static Token ToDomain(TokenEntity entity)
+    public static Token ToDomain(EFToken entity)
     {
-        return new Token(entity.Color){Id = entity.Id};
+        return new Token(entity.Color);
     }
 
-    public static TokenEntity ToEntity(Token domain)
+    public static EFToken ToEntity(Token domain)
     {
-        return new TokenEntity
+        return new EFToken
         {
             Color = domain.Color
         };

@@ -2,8 +2,7 @@
 
 public class Token
 {
-    public int Id { get; set; }
-    public string Color { get; }
+    public string Color { get; set; }
 
     public Token(string color)
     {

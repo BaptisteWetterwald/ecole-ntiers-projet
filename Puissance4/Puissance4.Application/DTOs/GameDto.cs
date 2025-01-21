@@ -1,0 +1,11 @@
+namespace Puissance4.Application.DTOs;
+
+public class GameDto
+{
+    public int Id { get; set; }
+    public PlayerDto Host { get; set; }
+    public PlayerDto? Guest { get; set; }
+    public PlayerDto? Winner { get; set; }
+    public string Status { get; set; }
+    public GridDto Grid { get; set; }
+}
