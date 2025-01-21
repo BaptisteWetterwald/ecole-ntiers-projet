@@ -7,7 +7,7 @@ public static class TokenMapper
 {
     public static Token ToDomain(TokenEntity entity)
     {
-        return new Token(entity.Color);
+        return new Token(entity.Color){Id = entity.Id};
     }
 
     public static TokenEntity ToEntity(Token domain)

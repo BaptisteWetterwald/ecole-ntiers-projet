@@ -11,8 +11,8 @@ public static class DataAccessConfiguration
     {
         services.AddDbContext<Puissance4DbContext>(options =>
             options.UseSqlite(connectionString)
-                .EnableSensitiveDataLogging()
-                .LogTo(Console.WriteLine)
+                //.EnableSensitiveDataLogging()
+                //.LogTo(Console.WriteLine)
         ); // Utilise SQLite comme base de données
         
         services.AddScoped<ICellRepository, CellRepository>();

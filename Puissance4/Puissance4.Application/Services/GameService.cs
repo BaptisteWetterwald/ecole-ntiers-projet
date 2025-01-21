@@ -26,28 +26,8 @@ public class GameService
     }
 
 
-    public async Task<Game> CreateGame(int hostId)
+    public async Task<Game> CreateGame()
     {
-        /*
-        Console.WriteLine("GameService: CreateGame(" + hostId + ")");
-        PlayerEntity? hostEntity = await _playerRepository.GetByLoginAsync("baptiste");
-        if (hostEntity == null) throw new Exception("Player not found");
-        
-        Player host = PlayerMapper.ToDomainWithoutGames(hostEntity);
-        Grid grid = new Grid(6, 7);
-        GridEntity gridEntity = GridMapper.ToEntity(grid);
-        
-        await _gridRepository.AddAsync(gridEntity);
-        
-        Game game = new Game(host)
-        {
-            Grid = grid
-        };
-
-        await _gameRepository.AddAsync(GameMapper.ToEntity(game));
-        await _gameRepository.SaveChangesAsync();
-        return game;
-        */
         throw new NotImplementedException();
     }
 
@@ -57,10 +37,38 @@ public class GameService
         throw new NotImplementedException();
     }
 
-    public object? PlayTurn(int gameId, int playerId, int column)
+    public Game PlayTurn(int gameId, int userId, int column)
     {
-        Console.WriteLine("GameService: PlayTurn(" + gameId + ", " + playerId + ", " + column + ")");
-        throw new NotImplementedException();
+        /* Faire les repos puis tester ça :
+        // Récupérer la partie depuis le repository
+        var game = _gameRepository.GetById(gameId);
+        if (game == null)
+            throw new InvalidOperationException("Game not found.");
+
+        // Récupérer le joueur depuis le repository
+        var player = _playerRepository.GetById(userId);
+        if (player == null)
+            throw new InvalidOperationException("Player not found.");
+
+        // Vérifier les règles du jeu
+        if (game.CurrentTurn.Id != player.Id)
+            throw new InvalidOperationException("It's not your turn!");
+
+        if (!ValidateMove(column, game))
+            throw new InvalidOperationException("Invalid move.");
+
+        // Appliquer le mouvement
+        ApplyMoveToGrid(game, player, column);
+
+        // Mettre à jour le tour
+        UpdateTurn(game);
+
+        // Sauvegarder les modifications dans la base
+        _gameRepository.Update(game);
+
+        return game;
+        */
+        return null;
     }
 
     public async Task<Cell> Test()
@@ -108,6 +116,20 @@ public class GameService
 
         Console.WriteLine($"Saved Cell: ID={savedCell.Id}, Token={savedCell.Token?.Color}");
         return savedCell;
+    }
+    
+    // test the deletion of a cell
+    public async Task Test3()
+    {
+        Console.WriteLine("GameService: Test3()");
+        
+        // Get a cell
+        var cellEntity = await _cellRepository.GetCellAt(1, 1, 1);
+        if (cellEntity == null) throw new Exception("Cell not found");
+        
+        // Delete the cell
+        _cellRepository.Delete(cellEntity);
+        await _cellRepository.SaveChangesAsync();
     }
 
 }

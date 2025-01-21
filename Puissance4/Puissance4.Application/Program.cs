@@ -1,17 +1,36 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Puissance4.Application.Services;
 using Puissance4.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Ajouter la configuration DataAccess
+builder.Configuration.AddUserSecrets<Program>();
 builder.Services.AddDataAccess(builder.Configuration.GetConnectionString("DefaultConnection"));
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<GameService>();
 builder.Services.AddScoped<AuthService>();
-
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        };
+    });
 
 var app = builder.Build();
 
@@ -28,12 +47,11 @@ using (var scope = app.Services.CreateScope())
     DbInitializer.Initialize(context);
 }
 
-
 app.UseHttpsRedirection();
-
-// Middleware
 app.UseRouting();
-app.UseEndpoints(endpoints => endpoints.MapControllers());
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapControllers();
 
 var summaries = new[]
 {
