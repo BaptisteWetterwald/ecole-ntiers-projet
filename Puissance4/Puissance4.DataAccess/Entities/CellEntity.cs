@@ -15,4 +15,7 @@ public class CellEntity()
     
     public int Row { get; set; }
     public int Column { get; set; }
+    
+    [ForeignKey(nameof(GridId))]
+    public GridEntity Grid { get; set; }
 }

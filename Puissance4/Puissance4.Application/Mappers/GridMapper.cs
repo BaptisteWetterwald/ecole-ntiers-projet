@@ -7,18 +7,30 @@ public static class GridMapper
 {
     public static GridEntity ToEntity(Grid grid)
     {
-        var cells = new List<CellEntity>();
-        foreach (var cell in grid.Cells)
-        {
-            cells.Add(CellMapper.ToEntity(cell));
-        }
-        return new GridEntity
+        // Créer une entité Grid
+        var gridEntity = new GridEntity
         {
             Rows = grid.Rows,
-            Columns = grid.Columns,
-            //CellsId = cellIds
-            Cells = cells
+            Columns = grid.Columns
         };
+
+        // Mapper chaque Cell vers une CellEntity
+        foreach (var cell in grid.Cells)
+        {
+            var cellEntity = CellMapper.ToEntity(cell);
+            
+            // Don't map empty cells
+            if (cellEntity.Token == null)
+            {
+                continue;
+            }
+            
+            gridEntity.Cells.Add(cellEntity);
+        }
+
+        Console.WriteLine($"GridMapper: ToEntity() - {gridEntity.Cells.Count} cells mapped");
+
+        return gridEntity;
     }
     
     public static Grid ToDomain(GridEntity gridEntity)
@@ -33,7 +45,7 @@ public static class GridMapper
             cells[cellEntity.Row, cellEntity.Column] = cell;
         }
 
-        return new Grid(gridEntity.Rows, gridEntity.Columns)
+        return new Grid
         {
             Cells = cells
         };

@@ -8,7 +8,7 @@ public class Puissance4DbContext : DbContext
 {
     //public DbSet<PlayerEntity> Players { get; set; }
     //public DbSet<GameEntity> Games { get; set; }
-    //public DbSet<GridEntity> Grids { get; set; }
+    public DbSet<GridEntity> Grids { get; set; }
     public DbSet<CellEntity> Cells { get; set; }
     public DbSet<TokenEntity> Tokens { get; set; }
     
@@ -60,12 +60,14 @@ public class Puissance4DbContext : DbContext
                 .WithMany()
                 .HasForeignKey(g => g.WinnerId)
                 .OnDelete(DeleteBehavior.Restrict);
-        });
+        });*/
 
         // Configuration de GridEntity
         modelBuilder.Entity<GridEntity>(entity =>
         {
             entity.HasKey(g => g.Id);
+            entity.Property(g => g.Id).ValueGeneratedOnAdd();
+            
             entity.Property(g => g.Rows).IsRequired();
             entity.Property(g => g.Columns).IsRequired();
 
@@ -75,7 +77,6 @@ public class Puissance4DbContext : DbContext
                 .HasForeignKey(c => c.GridId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
-        */
 
         // Configuration de CellEntity
         modelBuilder.Entity<CellEntity>(entity =>
@@ -85,6 +86,12 @@ public class Puissance4DbContext : DbContext
             entity.Property(c => c.Row).IsRequired();
             entity.Property(c => c.Column).IsRequired();
 
+            // Relation avec Grid
+            entity.HasOne(g => g.Grid)
+                .WithMany(c => c.Cells)
+                .HasForeignKey(c => c.GridId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
             // Relation avec Token
             entity.HasOne(c => c.Token)
                 .WithOne(t => t.Cell)

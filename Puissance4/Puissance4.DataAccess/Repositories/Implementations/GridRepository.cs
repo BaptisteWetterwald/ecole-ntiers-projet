@@ -1,5 +1,4 @@
-﻿/*
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Puissance4.DataAccess.Entities;
 using Puissance4.DataAccess.Repositories.Interfaces;
 
@@ -8,10 +7,12 @@ namespace Puissance4.DataAccess.Repositories.Implementations;
 public class GridRepository : IGridRepository
 {
     private readonly Puissance4DbContext _context;
+    private readonly ICellRepository _cellRepository;
 
-    public GridRepository(Puissance4DbContext context)
+    public GridRepository(Puissance4DbContext context, ICellRepository cellRepository)
     {
         _context = context;
+        _cellRepository = cellRepository;
     }
 
     public async Task<GridEntity?> GetByIdAsync(int id)
@@ -37,6 +38,7 @@ public class GridRepository : IGridRepository
     public void Delete(GridEntity grid)
     {
         _context.Grids.Remove(grid);
+        _context.SaveChanges();
     }
 
     public async Task<GridEntity?> GetGridByGameIdAsync(int gameId)
@@ -45,9 +47,28 @@ public class GridRepository : IGridRepository
             .FirstOrDefaultAsync(g => g.GameId == gameId);
     }
 
-    public async Task SaveChangesAsync()
+    public async Task AddGridWithCellsAsync(GridEntity gridEntity)
     {
+        await _context.Grids.AddAsync(gridEntity);
+        await _context.SaveChangesAsync();
+
+        Console.WriteLine("Debug AddGridWithCellsAsync: gridEntity.Cells.Count = " + gridEntity.Cells.Count);
+
+        for (int row = 0; row < gridEntity.Rows; row++)
+        {
+            for (int column = 0; column < gridEntity.Columns; column++)
+            {
+                var cell = new CellEntity
+                {
+                    GridId = gridEntity.Id,
+                    Row = row,
+                    Column = column
+                };
+                
+                await _cellRepository.AddAsync(cell);
+            }
+        }
+        
         await _context.SaveChangesAsync();
     }
 }
-*/

@@ -29,7 +29,7 @@ public class CellRepository : ICellRepository
 
     public async Task AddAsync(CellEntity cell)
     {
-        await _context.Cells.AddAsync(cell);
+        await AddCellWithTokenAsync(cell);
     }
 
     public void Update(CellEntity cell)
@@ -40,6 +40,7 @@ public class CellRepository : ICellRepository
     public void Delete(CellEntity cell)
     {
         _context.Cells.Remove(cell);
+        _context.SaveChanges();
     }
 
     public async Task<IEnumerable<CellEntity>> GetCellsByGridIdAsync(int gridId)
@@ -97,10 +98,5 @@ public class CellRepository : ICellRepository
 
         // Appeler la méthode principale
         await AddCellWithTokenAsync(cellEntity, tokenEntity);
-    }
-
-    public async Task SaveChangesAsync()
-    {
-        await _context.SaveChangesAsync();
     }
 }

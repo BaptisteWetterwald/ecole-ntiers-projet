@@ -7,16 +7,16 @@ namespace Puissance4.Application.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+//[Authorize]
 public class GamesController : ControllerBase
 {
     private readonly GameService _gameService;
-    private readonly AuthService _authService;
+    //private readonly AuthService _authService;
 
-    public GamesController(GameService gameService, AuthService authService)
+    public GamesController(GameService gameService/*, AuthService authService*/)
     {
         _gameService = gameService;
-        _authService = authService;
+        //_authService = authService;
     }
 
     [HttpPost("create")]
@@ -36,13 +36,15 @@ public class GamesController : ControllerBase
     [HttpPost("{gameId:int}/play")]
     public IActionResult PlayTurn(int gameId, int column)
     {
+        /* Implémenter les repos avant de décommenter
         var playerId = _authService.GetUserId();
         if (string.IsNullOrEmpty(playerId.ToString()))
             return Unauthorized("Player not authenticated.");
+        */
         
         try
         {
-            var game = _gameService.PlayTurn(gameId, playerId, column); // Appel au service métier
+            var game = _gameService.PlayTurn(gameId, /*playerId*/0, column); // Appel au service métier
             return Ok(game);
         }
         catch (InvalidOperationException ex)
@@ -69,6 +71,13 @@ public class GamesController : ControllerBase
     public IActionResult Test3()
     {
         var item = _gameService.Test3();
+        return Ok(item);
+    }
+    
+    [HttpGet("test4")]
+    public IActionResult Test4()
+    {
+        var item = _gameService.Test4();
         return Ok(item);
     }
     

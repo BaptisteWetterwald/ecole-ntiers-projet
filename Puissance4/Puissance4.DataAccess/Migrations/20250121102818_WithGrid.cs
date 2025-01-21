@@ -5,11 +5,26 @@
 namespace Puissance4.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class TestingContext : Migration
+    public partial class WithGrid : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Grids",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    GameId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Columns = table.Column<int>(type: "INTEGER", nullable: false),
+                    Rows = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Grids", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Cells",
                 columns: table => new
@@ -24,6 +39,12 @@ namespace Puissance4.DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Cells", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Cells_Grids_GridId",
+                        column: x => x.GridId,
+                        principalTable: "Grids",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -47,6 +68,11 @@ namespace Puissance4.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Cells_GridId",
+                table: "Cells",
+                column: "GridId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Tokens_CellId",
                 table: "Tokens",
                 column: "CellId",
@@ -61,6 +87,9 @@ namespace Puissance4.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "Cells");
+
+            migrationBuilder.DropTable(
+                name: "Grids");
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿/*
+using Microsoft.AspNetCore.Mvc;
 using Puissance4.Application.DTOs;
 using Puissance4.Application.Services;
 
@@ -27,3 +28,4 @@ public class AuthController : ControllerBase
         return Unauthorized();
     }
 }
+*/

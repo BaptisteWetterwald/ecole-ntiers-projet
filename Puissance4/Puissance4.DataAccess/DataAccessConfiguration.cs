@@ -16,8 +16,8 @@ public static class DataAccessConfiguration
         ); // Utilise SQLite comme base de données
         
         services.AddScoped<ICellRepository, CellRepository>();
-        /*services.AddScoped<IGridRepository, GridRepository>();
-        services.AddScoped<IGameRepository, GameRepository>();
+        services.AddScoped<IGridRepository, GridRepository>();
+        /*services.AddScoped<IGameRepository, GameRepository>();
         services.AddScoped<IPlayerRepository, PlayerRepository>();*/
 
         return services;

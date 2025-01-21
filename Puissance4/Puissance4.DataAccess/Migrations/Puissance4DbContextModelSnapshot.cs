@@ -36,7 +36,29 @@ namespace Puissance4.DataAccess.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GridId");
+
                     b.ToTable("Cells");
+                });
+
+            modelBuilder.Entity("Puissance4.DataAccess.Entities.GridEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Columns")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Rows")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Grids");
                 });
 
             modelBuilder.Entity("Puissance4.DataAccess.Entities.TokenEntity", b =>
@@ -61,6 +83,17 @@ namespace Puissance4.DataAccess.Migrations
                     b.ToTable("Tokens");
                 });
 
+            modelBuilder.Entity("Puissance4.DataAccess.Entities.CellEntity", b =>
+                {
+                    b.HasOne("Puissance4.DataAccess.Entities.GridEntity", "Grid")
+                        .WithMany("Cells")
+                        .HasForeignKey("GridId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Grid");
+                });
+
             modelBuilder.Entity("Puissance4.DataAccess.Entities.TokenEntity", b =>
                 {
                     b.HasOne("Puissance4.DataAccess.Entities.CellEntity", "Cell")
@@ -74,6 +107,11 @@ namespace Puissance4.DataAccess.Migrations
             modelBuilder.Entity("Puissance4.DataAccess.Entities.CellEntity", b =>
                 {
                     b.Navigation("Token");
+                });
+
+            modelBuilder.Entity("Puissance4.DataAccess.Entities.GridEntity", b =>
+                {
+                    b.Navigation("Cells");
                 });
 #pragma warning restore 612, 618
         }

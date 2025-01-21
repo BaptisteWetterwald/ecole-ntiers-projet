@@ -8,20 +8,20 @@ namespace Puissance4.Application.Services;
 public class GameService
 {
     /*private readonly IGameRepository _gameRepository;
-    private readonly IPlayerRepository _playerRepository;
-    private readonly IGridRepository _gridRepository;*/
+    private readonly IPlayerRepository _playerRepository;*/
+    private readonly IGridRepository _gridRepository;
     private readonly ICellRepository _cellRepository;
 
     public GameService(
         /*IGameRepository gameRepository,
-        IPlayerRepository playerRepository,
-        IGridRepository gridRepository,*/
+        IPlayerRepository playerRepository,*/
+        IGridRepository gridRepository,
         ICellRepository cellRepository
     )
     {
         /*_gameRepository = gameRepository;
-        _playerRepository = playerRepository;
-        _gridRepository = gridRepository;*/
+        _playerRepository = playerRepository;*/
+        _gridRepository = gridRepository;
         _cellRepository = cellRepository;
     }
 
@@ -129,7 +129,24 @@ public class GameService
         
         // Delete the cell
         _cellRepository.Delete(cellEntity);
-        await _cellRepository.SaveChangesAsync();
     }
 
+    public async Task<Grid> Test4()
+    {
+        Console.WriteLine("GameService: Test4()");
+        
+        // Create a grid
+        var grid = new Grid();
+        
+        // Add a few tokens to the grid
+        grid.DropToken(0, new Token("Red"));
+        grid.DropToken(1, new Token("Yellow"));
+        grid.DropToken(2, new Token("Red"));
+        
+        // Save the grid
+        var gridEntity = GridMapper.ToEntity(grid);
+        await _gridRepository.AddGridWithCellsAsync(gridEntity);
+        
+        return grid;
+    }
 }
