@@ -1,9 +1,8 @@
-﻿using Puissance4.DataAccess.Entities;
+using Puissance4.DataAccess.Entities;
 
 namespace Puissance4.DataAccess.Repositories.Interfaces;
 
-public interface IPlayerRepository : IRepository<PlayerEntity>
+public interface IPlayerRepository : IRepository<EFPlayer>
 {
-    Task<PlayerEntity?> GetByLoginAsync(string login);
-    Task<IEnumerable<GameEntity>> GetPlayerGamesAsync(int playerId);
+    Task<EFPlayer> GetByLoginAsync(string login);
 }

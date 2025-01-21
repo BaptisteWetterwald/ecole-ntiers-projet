@@ -59,26 +59,4 @@ public class GamesController : ControllerBase
         var item = _gameService.Test();
         return Ok(item);
     }
-    
-    [HttpGet("test2")]
-    public IActionResult Test2()
-    {
-        var item = _gameService.Test2();
-        return Ok(item);
-    }
-    
-    [HttpGet("test3")]
-    public IActionResult Test3()
-    {
-        var item = _gameService.Test3();
-        return Ok(item);
-    }
-    
-    [HttpGet("test4")]
-    public IActionResult Test4()
-    {
-        var item = _gameService.Test4();
-        return Ok(item);
-    }
-    
 }

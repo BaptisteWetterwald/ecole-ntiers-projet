@@ -17,8 +17,8 @@ public static class DataAccessConfiguration
         
         services.AddScoped<ICellRepository, CellRepository>();
         services.AddScoped<IGridRepository, GridRepository>();
-        /*services.AddScoped<IGameRepository, GameRepository>();
-        services.AddScoped<IPlayerRepository, PlayerRepository>();*/
+        services.AddScoped<IGameRepository, GameRepository>();
+        services.AddScoped<IPlayerRepository, PlayerRepository>();
 
         return services;
     }

@@ -7,20 +7,20 @@ namespace Puissance4.Application.Services;
 
 public class GameService
 {
-    /*private readonly IGameRepository _gameRepository;
-    private readonly IPlayerRepository _playerRepository;*/
+    private readonly IGameRepository _gameRepository;
+    private readonly IPlayerRepository _playerRepository;
     private readonly IGridRepository _gridRepository;
     private readonly ICellRepository _cellRepository;
 
     public GameService(
-        /*IGameRepository gameRepository,
-        IPlayerRepository playerRepository,*/
+        IGameRepository gameRepository,
+        IPlayerRepository playerRepository,
         IGridRepository gridRepository,
         ICellRepository cellRepository
     )
     {
-        /*_gameRepository = gameRepository;
-        _playerRepository = playerRepository;*/
+        _gameRepository = gameRepository;
+        _playerRepository = playerRepository;
         _gridRepository = gridRepository;
         _cellRepository = cellRepository;
     }
@@ -71,82 +71,50 @@ public class GameService
         return null;
     }
 
-    public async Task<Cell> Test()
+    public async Task Test()
     {
         Console.WriteLine("GameService: Test()");
 
-        var token = new Token("Red");
-        var cell = new Cell(1, 1)
+        var grid = new EFGrid
         {
-            Token = token
+            Rows = 6,
+            Columns = 7,
+            Cells = new List<EFCell>()
         };
 
-        // Mapper les entités
-        var cellEntity = CellMapper.ToEntity(cell);
-
-        // Ajouter la cellule et son token via _cellRepository
-        await _cellRepository.AddCellWithTokenAsync(cellEntity, cellEntity.Token);
-
-        // Mapper le résultat final en objet métier
-        var savedCell = CellMapper.ToDomain(cellEntity);
-
-        Console.WriteLine($"Saved Cell: ID={savedCell.Id}, Token={savedCell.Token?.Color}");
-        return savedCell;
-    }
-    
-    // same but with the token directly in the cell
-    public async Task<Cell> Test2()
-    {
-        Console.WriteLine("GameService: Test2()");
-
-        var token = new Token("Red");
-        var cell = new Cell(2, 2)
+        for (int row = 0; row < 6; row++)
         {
-            Token = token
+            for (int column = 0; column < 7; column++)
+            {
+                grid.Cells.Add(new EFCell
+                {
+                    Row = row,
+                    Column = column,
+                    Grid = grid // Associe chaque cellule à la grille
+                });
+            }
+        }
+
+        var player1 = new EFPlayer { Login = "Alice", PasswordHash = "hashedpassword1" };
+        var player2 = new EFPlayer { Login = "Bob", PasswordHash = "hashedpassword2" };
+
+        var game = new EFGame
+        {
+            Host = player1,
+            Guest = player2,
+            Grid = grid,
+            Status = "In Progress"
         };
 
-        // Mapper les entités
-        var cellEntity = CellMapper.ToEntity(cell);
-
-        // Ajouter la cellule et son token via _cellRepository
-        await _cellRepository.AddCellWithTokenAsync(cellEntity);
-
-        // Mapper le résultat final en objet métier
-        var savedCell = CellMapper.ToDomain(cellEntity);
-
-        Console.WriteLine($"Saved Cell: ID={savedCell.Id}, Token={savedCell.Token?.Color}");
-        return savedCell;
-    }
-    
-    // test the deletion of a cell
-    public async Task Test3()
-    {
-        Console.WriteLine("GameService: Test3()");
+        // context.Players.AddRange(player1, player2);
+        // context.Games.Add(game);
+        // context.SaveChanges();
         
-        // Get a cell
-        var cellEntity = await _cellRepository.GetCellAt(1, 1, 1);
-        if (cellEntity == null) throw new Exception("Cell not found");
+        await _playerRepository.AddAsync(player1);
+        await _playerRepository.AddAsync(player2);
+        await _gameRepository.AddAsync(game);
         
-        // Delete the cell
-        _cellRepository.Delete(cellEntity);
+        Console.WriteLine("GameService: Test() - Game created");
     }
 
-    public async Task<Grid> Test4()
-    {
-        Console.WriteLine("GameService: Test4()");
-        
-        // Create a grid
-        var grid = new Grid();
-        
-        // Add a few tokens to the grid
-        grid.DropToken(0, new Token("Red"));
-        grid.DropToken(1, new Token("Yellow"));
-        grid.DropToken(2, new Token("Red"));
-        
-        // Save the grid
-        var gridEntity = GridMapper.ToEntity(grid);
-        await _gridRepository.AddGridWithCellsAsync(gridEntity);
-        
-        return grid;
-    }
 }

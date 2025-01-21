@@ -1,9 +1,8 @@
-﻿using Puissance4.DataAccess.Entities;
+using Puissance4.DataAccess.Entities;
 
 namespace Puissance4.DataAccess.Repositories.Interfaces;
 
-public interface IGridRepository : IRepository<GridEntity>
+public interface IGridRepository : IRepository<EFGrid>
 {
-    Task<GridEntity?> GetGridByGameIdAsync(int gameId);
-    Task AddGridWithCellsAsync(GridEntity gridEntity);
+    Task<EFGrid> GetGridWithCellsAsync(int gridId);
 }

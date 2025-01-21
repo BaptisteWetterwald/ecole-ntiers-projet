@@ -1,11 +1,8 @@
-﻿using Puissance4.DataAccess.Entities;
+using Puissance4.DataAccess.Entities;
 
 namespace Puissance4.DataAccess.Repositories.Interfaces;
 
-public interface ICellRepository : IRepository<CellEntity>
+public interface ICellRepository : IRepository<EFCell>
 {
-    Task<IEnumerable<CellEntity>> GetCellsByGridIdAsync(int gridId);
-    Task<CellEntity?> GetCellAt(int gridId, int row, int column);
-    Task AddCellWithTokenAsync(CellEntity cellEntity, TokenEntity? tokenEntity);
-    Task AddCellWithTokenAsync(CellEntity cellEntity);
+    Task<EFCell> GetCellByCoordinatesAsync(int gridId, int row, int column);
 }

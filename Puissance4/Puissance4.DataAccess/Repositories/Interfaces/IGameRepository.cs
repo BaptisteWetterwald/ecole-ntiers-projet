@@ -1,9 +1,9 @@
-﻿using Puissance4.DataAccess.Entities;
+using Puissance4.DataAccess.Entities;
 
 namespace Puissance4.DataAccess.Repositories.Interfaces;
 
-public interface IGameRepository : IRepository<GameEntity>
+public interface IGameRepository : IRepository<EFGame>
 {
-    Task<IEnumerable<GameEntity>> GetGamesByStatusAsync(string status);
-    Task<IEnumerable<GameEntity>> GetGamesForPlayerAsync(int playerId);
+    Task<EFGame> GetGameWithGridAsync(int gameId);
+    Task<IEnumerable<EFGame>> GetGamesByPlayerAsync(int playerId);
 }
