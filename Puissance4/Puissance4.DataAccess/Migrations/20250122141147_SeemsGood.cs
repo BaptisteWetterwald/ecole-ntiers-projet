@@ -5,7 +5,7 @@
 namespace Puissance4.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class RefactoredEntities : Migration
+    public partial class SeemsGood : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,7 +31,7 @@ namespace Puissance4.DataAccess.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Login = table.Column<string>(type: "TEXT", nullable: false),
-                    PasswordHash = table.Column<string>(type: "TEXT", nullable: false)
+                    PasswordHash = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -39,16 +39,25 @@ namespace Puissance4.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tokens",
+                name: "Cells",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Color = table.Column<string>(type: "TEXT", nullable: false)
+                    Row = table.Column<int>(type: "INTEGER", nullable: false),
+                    Column = table.Column<int>(type: "INTEGER", nullable: false),
+                    GridId = table.Column<int>(type: "INTEGER", nullable: false),
+                    TokenColor = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tokens", x => x.Id);
+                    table.PrimaryKey("PK_Cells", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Cells_Grids_GridId",
+                        column: x => x.GridId,
+                        principalTable: "Grids",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -97,42 +106,10 @@ namespace Puissance4.DataAccess.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Cells",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Row = table.Column<int>(type: "INTEGER", nullable: false),
-                    Column = table.Column<int>(type: "INTEGER", nullable: false),
-                    GridId = table.Column<int>(type: "INTEGER", nullable: false),
-                    TokenId = table.Column<int>(type: "INTEGER", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Cells", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Cells_Grids_GridId",
-                        column: x => x.GridId,
-                        principalTable: "Grids",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Cells_Tokens_TokenId",
-                        column: x => x.TokenId,
-                        principalTable: "Tokens",
-                        principalColumn: "Id");
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Cells_GridId",
                 table: "Cells",
                 column: "GridId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Cells_TokenId",
-                table: "Cells",
-                column: "TokenId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Games_CurrentTurnId",
@@ -163,9 +140,6 @@ namespace Puissance4.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "Games");
-
-            migrationBuilder.DropTable(
-                name: "Tokens");
 
             migrationBuilder.DropTable(
                 name: "Grids");

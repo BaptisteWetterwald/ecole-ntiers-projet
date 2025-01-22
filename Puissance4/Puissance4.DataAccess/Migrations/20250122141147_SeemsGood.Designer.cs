@@ -10,8 +10,8 @@ using Puissance4.DataAccess;
 namespace Puissance4.DataAccess.Migrations
 {
     [DbContext(typeof(Puissance4DbContext))]
-    [Migration("20250121135322_RefactoredEntities")]
-    partial class RefactoredEntities
+    [Migration("20250122141147_SeemsGood")]
+    partial class SeemsGood
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,14 +34,13 @@ namespace Puissance4.DataAccess.Migrations
                     b.Property<int>("Row")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("TokenId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("TokenColor")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("GridId");
-
-                    b.HasIndex("TokenId");
 
                     b.ToTable("Cells");
                 });
@@ -108,27 +107,11 @@ namespace Puissance4.DataAccess.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PasswordHash")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.ToTable("Players");
-                });
-
-            modelBuilder.Entity("Puissance4.DataAccess.Entities.EFToken", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Color")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Tokens");
                 });
 
             modelBuilder.Entity("Puissance4.DataAccess.Entities.EFCell", b =>
@@ -139,13 +122,7 @@ namespace Puissance4.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Puissance4.DataAccess.Entities.EFToken", "Token")
-                        .WithMany()
-                        .HasForeignKey("TokenId");
-
                     b.Navigation("Grid");
-
-                    b.Navigation("Token");
                 });
 
             modelBuilder.Entity("Puissance4.DataAccess.Entities.EFGame", b =>
