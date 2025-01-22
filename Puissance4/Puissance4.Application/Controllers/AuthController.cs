@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Puissance4.Application.DTOs;
 using Puissance4.Application.Services;
 
@@ -36,6 +37,7 @@ public class AuthController : ControllerBase
         return Ok(new BearerTokenDto { Token = token });
     }
     
+    [Authorize]
     [HttpPost("logout")]
     public IActionResult Logout()
     {
