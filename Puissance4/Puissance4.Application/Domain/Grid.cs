@@ -6,7 +6,19 @@ public class Grid
 {
     public int Rows = 6;
     public int Columns = 7;
-    public required Cell[,] Cells;
+    public Cell[,] Cells;
+    
+    public Grid()
+    {
+        Cells = new Cell[Rows, Columns];
+        for (int row = 0; row < Rows; row++)
+        {
+            for (int column = 0; column < Columns; column++)
+            {
+                Cells[row, column] = new Cell(row, column);
+            }
+        }
+    }
     
     public bool DropToken(int column, Token token)
     {

@@ -20,8 +20,7 @@ public static class PlayerMapper
         return new EFPlayer
         {
             Id = domain.Id,
-            Login = domain.Login,
-            PasswordHash = "" // Vous pouvez gérer cela ailleurs
+            Login = domain.Login
         };
     }
     

@@ -2,7 +2,7 @@
 
 public class Game
 {
-    private static class Statuses
+    public static class Statuses
     {
         public const string AwaitingGuest = "Awaiting Guest";
         public const string InProgress = "In Progress";
@@ -21,18 +21,13 @@ public class Game
     {
         Host = host;
         CurrentTurn = null;
-        Grid = new Grid
-        {
-            Rows = 6,
-            Columns = 7,
-            Cells = new Cell[6, 7]
-        };
+        Grid = new Grid();
     }
     
     public void JoinGame(Player guest)
     {
         if (Guest != null) throw new InvalidOperationException("A guest has already joined.");
-        if (guest == Host) throw new InvalidOperationException("Host cannot join their own game.");
+        if (guest.Equals(Host)) throw new InvalidOperationException("Host cannot join their own game.");
         Guest = guest;
         CurrentTurn = Guest; // L'invité commence.
         Status = Statuses.InProgress;
@@ -40,10 +35,11 @@ public class Game
     
     public void PlayTurn(Player player, int column)
     {
-        if (player != CurrentTurn) throw new InvalidOperationException("Not your turn.");
-        if (Status != "In Progress") throw new InvalidOperationException("Game is not in progress.");
+        if (!player.Equals(CurrentTurn)) throw new InvalidOperationException("Not your turn.");
+        if (Status != Statuses.InProgress) throw new InvalidOperationException("Game is not in progress.");
+        if (column < 0 || column >= Grid.Columns) throw new InvalidOperationException("Invalid column.");
 
-        var token = new Token(player == Host ? "Red" : "Yellow");
+        var token = new Token(player.Equals(Host) ? "Red" : "Yellow");
         Grid.DropToken(column, token);
 
         if (Grid.CheckWin())
@@ -59,10 +55,12 @@ public class Game
         {
             SwitchTurn();
         }
+
+        Console.WriteLine("Grid updated: " + Grid);
     }
     
     private void SwitchTurn()
     {
-        CurrentTurn = CurrentTurn == Host ? Guest : Host;
+        CurrentTurn = CurrentTurn!.Equals(Host) ? Guest : Host;
     }
 }

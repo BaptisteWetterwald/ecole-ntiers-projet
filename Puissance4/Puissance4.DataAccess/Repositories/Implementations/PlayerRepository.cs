@@ -10,9 +10,9 @@ public class PlayerRepository : Repository<EFPlayer>, IPlayerRepository
     {
     }
 
-    public Task<EFPlayer> GetByLoginAsync(string login)
+    public Task<EFPlayer?> GetByLoginAsync(string login)
     {
-        return _context.Players.FirstOrDefaultAsync(p => p.Login == login);
+        return _context.Players.Include(p => p.Login).FirstOrDefaultAsync(p => p.Login == login);
     }
 
     public Task<EFPlayer?> GetByLoginAndPasswordAsync(string login, string hashedPassword)

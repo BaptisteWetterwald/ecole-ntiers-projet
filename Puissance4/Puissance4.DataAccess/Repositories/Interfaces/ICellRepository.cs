@@ -4,5 +4,5 @@ namespace Puissance4.DataAccess.Repositories.Interfaces;
 
 public interface ICellRepository : IRepository<EFCell>
 {
-    Task<EFCell> GetCellByCoordinatesAsync(int gridId, int row, int column);
+    Task<EFCell?> GetCellByCoordinatesAsync(int gridId, int row, int column);
 }

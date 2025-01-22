@@ -11,8 +11,13 @@ public class GameRepository : Repository<EFGame>, IGameRepository
     public async Task<EFGame?> GetGameWithGridAsync(int gameId)
     {
         return await _context.Games
+            .Include(g => g.Host)
+            .Include(g => g.Guest)
+            .Include(g => g.Winner)
+            .Include(g => g.CurrentTurn)
             .Include(g => g.Grid)
             .ThenInclude(grid => grid.Cells)
+            .ThenInclude(cell => cell.Token)
             .FirstOrDefaultAsync(g => g.Id == gameId);
     }
 
@@ -23,8 +28,10 @@ public class GameRepository : Repository<EFGame>, IGameRepository
             .ToListAsync();
     }
 
-    public Task<IEnumerable<EFGame>> GetPendingGames()
+    public async Task<IEnumerable<EFGame>> GetPendingGames()
     {
-        return Task.FromResult(_context.Games.Where(g => g.Status == EFGame.Statuses.AwaitingGuest).AsEnumerable());
+        return await _context.Games
+            .Where(g => g.Status == EFGame.Statuses.AwaitingGuest)
+            .ToListAsync();
     }
 }

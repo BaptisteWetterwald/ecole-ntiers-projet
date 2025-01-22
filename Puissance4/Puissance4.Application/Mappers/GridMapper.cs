@@ -35,31 +35,37 @@ public static class GridMapper
     // Conversion de Grid à EFGrid (ignorer les cellules sans Token)
     public static EFGrid ToEntity(Grid grid)
     {
-        return new EFGrid
+        var efGrid = new EFGrid
         {
             Rows = grid.Rows,
             Columns = grid.Columns,
-            Cells = grid.Cells
-                .Cast<Cell>() // Convertir le tableau 2D en IEnumerable<Cell>
-                .Where(cell => cell.Token != null) // Ignorer les cellules sans Token
-                .Select(CellMapper.ToEntity) // Mapper vers EFCell
-                .ToList()
+            Cells = new List<EFCell>()
         };
+        
+        for (int row = 0; row < grid.Rows; row++)
+        {
+            for (int column = 0; column < grid.Columns; column++)
+            {
+                var cell = grid.Cells[row, column];
+                if (cell.Token == null) continue;
+                efGrid.Cells.Add(CellMapper.ToEntity(cell));
+            }
+        }
+        
+        return efGrid;
     }
     
     public static GridDto ToDto(Grid grid)
     {
-        var cellsDto = new List<List<CellDto>>();
+        var cellsDto = new List<CellDto>();
         for (int row = 0; row < grid.Rows; row++)
         {
-            var rowDto = new List<CellDto>();
             for (int column = 0; column < grid.Columns; column++)
             {
-                rowDto.Add(CellMapper.ToDto(grid.Cells[row, column]));
+                cellsDto.Add(CellMapper.ToDto(grid.Cells[row, column]));
             }
-            cellsDto.Add(rowDto);
         }
-
+        
         return new GridDto
         {
             Rows = grid.Rows,
@@ -70,22 +76,17 @@ public static class GridMapper
     
     public static GridDto ToDto(EFGrid efGrid)
     {
-        var cellsDto = new List<List<CellDto>>();
+        var cells = new List<CellDto>();
         foreach (var efCell in efGrid.Cells)
         {
-            var rowDto = new List<CellDto>();
-            for (int column = 0; column < efGrid.Columns; column++)
-            {
-                rowDto.Add(CellMapper.ToDto(efCell));
-            }
-            cellsDto.Add(rowDto);
+            cells.Add(CellMapper.ToDto(efCell));
         }
-
+        
         return new GridDto
         {
             Rows = efGrid.Rows,
             Columns = efGrid.Columns,
-            Cells = cellsDto
+            Cells = cells
         };
     }
 }

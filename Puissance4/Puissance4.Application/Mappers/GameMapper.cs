@@ -41,6 +41,7 @@ public static class GameMapper
             Host = PlayerMapper.ToDto(game.Host),
             Guest = game.Guest != null ? PlayerMapper.ToDto(game.Guest) : null,
             Winner = game.Winner != null ? PlayerMapper.ToDto(game.Winner) : null,
+            CurrentTurn = game.CurrentTurn != null ? PlayerMapper.ToDto(game.CurrentTurn) : null,
             Status = game.Status,
             Grid = GridMapper.ToDto(game.Grid)
         };
@@ -48,12 +49,17 @@ public static class GameMapper
     
     public static GameDto ToDto(EFGame entity)
     {
+        if (entity.Host == null)
+        {
+            throw new ArgumentException("Host is required");
+        }
         return new GameDto
         {
             Id = entity.Id,
             Host = PlayerMapper.ToDto(entity.Host),
             Guest = entity.Guest != null ? PlayerMapper.ToDto(entity.Guest) : null,
             Winner = entity.Winner != null ? PlayerMapper.ToDto(entity.Winner) : null,
+            CurrentTurn = entity.CurrentTurn != null ? PlayerMapper.ToDto(entity.CurrentTurn) : null,
             Status = entity.Status,
             Grid = GridMapper.ToDto(entity.Grid)
         };

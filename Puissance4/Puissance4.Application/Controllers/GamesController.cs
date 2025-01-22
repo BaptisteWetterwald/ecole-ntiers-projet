@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Puissance4.Application.Domain;
 using Puissance4.Application.DTOs;
 using Puissance4.Application.Services;
 
@@ -59,15 +60,30 @@ public class GamesController : ControllerBase
     [HttpPost("{gameId:int}/join")]
     public async Task<ActionResult<GameDto>> JoinGame(int gameId)
     {
-        var playerId = _authService.GetUserId();
-        var gameDto = await _gameService.JoinGame(gameId, playerId);
-        return Ok(gameDto);
+        try
+        {
+            var playerId = _authService.GetUserId();
+            var gameDto = await _gameService.JoinGame(gameId, playerId);
+            return Ok(gameDto);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [HttpPost("{gameId:int}/play")]
     public async Task<ActionResult<GameDto>> PlayTurn(int gameId, [FromBody] PlayTurnDto playTurnDto)
     {
-        var gameDto = await _gameService.PlayTurn(gameId, 0, playTurnDto.Column); // Remplacer 0 par l'ID du joueur connecté
-        return Ok(gameDto);
+        try
+        {
+            var playerId = _authService.GetUserId();
+            var gameDto = await _gameService.PlayTurn(gameId, playerId, playTurnDto.Column);
+            return Ok(gameDto);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 }

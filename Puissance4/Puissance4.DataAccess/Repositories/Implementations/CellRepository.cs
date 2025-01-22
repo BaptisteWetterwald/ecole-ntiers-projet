@@ -8,7 +8,7 @@ public class CellRepository : Repository<EFCell>, ICellRepository
 {
     public CellRepository(Puissance4DbContext context) : base(context) { }
 
-    public async Task<EFCell> GetCellByCoordinatesAsync(int gridId, int row, int column)
+    public async Task<EFCell?> GetCellByCoordinatesAsync(int gridId, int row, int column)
     {
         return await _context.Cells
             .FirstOrDefaultAsync(c => c.Row == row && c.Column == column && c.Id == gridId);

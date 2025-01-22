@@ -48,13 +48,21 @@ public class Puissance4DbContext : DbContext
         modelBuilder.Entity<EFGame>()
             .HasOne(g => g.Grid)
             .WithOne()
-            .HasForeignKey<EFGame>(g => g.Id);
+            .HasForeignKey<EFGame>(g => g.Id)
+            .OnDelete(DeleteBehavior.Cascade);
         
         // Grid - Cells relation
         modelBuilder.Entity<EFCell>()
             .HasOne(c => c.Grid)
             .WithMany(g => g.Cells)
             .HasForeignKey(c => c.GridId);
+        
+        // Cell - Token relation
+        modelBuilder.Entity<EFCell>()
+            .HasOne(c => c.Token)
+            .WithOne()
+            .HasForeignKey<EFCell>(c => c.Id)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 
     

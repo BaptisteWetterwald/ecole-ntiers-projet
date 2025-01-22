@@ -49,8 +49,8 @@ public class GameService
     {
         Console.WriteLine("GameService: JoinGame(" + gameId + ", " + guestId + ")");
         
-        var game = await _gameRepository.GetByIdAsync(gameId);
-        if (game == null)
+        var efGame = await _gameRepository.GetGameWithGridAsync(gameId);
+        if (efGame == null)
         {
             throw new ArgumentException("Game not found");
         }
@@ -60,10 +60,19 @@ public class GameService
         {
             throw new ArgumentException("Player not found");
         }
-                
-        var gameDomain = GameMapper.ToDomain(game);
+        
+        if (efGame.HostId == guestId)
+        {
+            throw new ArgumentException("Host cannot join his own game");
+        }
+        
+        var gameDomain = GameMapper.ToDomain(efGame);
         gameDomain.JoinGame(PlayerMapper.ToDomain(guest));
-        var efGame = GameMapper.ToEntity(gameDomain);
+        
+        efGame.GuestId = gameDomain.Guest?.Id;
+        efGame.CurrentTurnId = gameDomain.CurrentTurn?.Id;
+        efGame.Status = gameDomain.Status;
+        
         await _gameRepository.UpdateAsync(efGame);
         
         return GameMapper.ToDto(efGame);
@@ -84,14 +93,17 @@ public class GameService
         {
             throw new ArgumentException("Player not found");
         }
-        
+
         var gameDomain = GameMapper.ToDomain(game);
         gameDomain.PlayTurn(PlayerMapper.ToDomain(player), column);
-        
-        var efGame = GameMapper.ToEntity(gameDomain);
-        await _gameRepository.UpdateAsync(efGame);
-        
-        return GameMapper.ToDto(efGame);
+    
+        game.WinnerId = gameDomain.Winner?.Id;
+        game.CurrentTurnId = gameDomain.CurrentTurn?.Id;
+        game.Status = gameDomain.Status;
+    
+        await _gameRepository.UpdateAsync(game);
+    
+        return GameMapper.ToDto(game);
     }
 
     public async Task<GameDto?> GetGameById(int id)
@@ -107,7 +119,19 @@ public class GameService
         Console.WriteLine("GameService: GetPendingGames()");
         
         var efGames = await _gameRepository.GetPendingGames();
-        return efGames.Select(GameMapper.ToDto);
+
+        var gamesAsList = efGames.ToList().Select(g => new { g.Id });
+        // This contains the games IDs but not the inner objects
+        
+        var dtos = new List<GameDto>();
+        // call _gameRepository.GetGameWithGridAsync(gameId) for each gameId in gamesAsList, then convert to DTO
+        foreach (var game in gamesAsList)
+        {
+            var efGame = await _gameRepository.GetGameWithGridAsync(game.Id);
+            if (efGame != null) dtos.Add(GameMapper.ToDto(efGame));
+        }
+        
+        return dtos;
     }
 
     public async Task<IEnumerable<GameDto>> GetGamesOfPlayer(int playerId)
@@ -115,6 +139,16 @@ public class GameService
         Console.WriteLine("GameService: GetGamesOfPlayer(" + playerId + ")");
         
         var efGames = await _gameRepository.GetGamesOfPlayerAsync(playerId);
-        return efGames.Select(GameMapper.ToDto);
+        // This contains the games IDs but not the inner objects
+        
+        var dtos = new List<GameDto>();
+        // call _gameRepository.GetGameWithGridAsync(gameId) for each gameId in gamesAsList, then convert to DTO
+        foreach (var efGame in efGames)
+        {
+            var game = await _gameRepository.GetGameWithGridAsync(efGame.Id);
+            if (game != null) dtos.Add(GameMapper.ToDto(game));
+        }
+        
+        return dtos;
     }
 }

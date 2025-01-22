@@ -4,7 +4,7 @@ public class EFPlayer
 {
     public int Id { get; set; } // Clé primaire
     public string Login { get; set; } // Nom d'utilisateur
-    public string PasswordHash { get; set; } // Hash du mot de passe
+    public string? PasswordHash { get; set; } // Hash du mot de passe
 
     // Jeux où le joueur est hôte
     public ICollection<EFGame> GamesAsHost { get; set; }
