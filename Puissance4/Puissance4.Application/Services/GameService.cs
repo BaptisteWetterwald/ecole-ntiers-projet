@@ -80,31 +80,70 @@ public class GameService
 
     public async Task<GameDto> PlayTurn(int gameId, int playerId, int column)
     {
-        Console.WriteLine("GameService: PlayTurn(" + gameId + ", " + playerId + ", " + column + ")");
-        
-        var game = await _gameRepository.GetGameWithGridAsync(gameId);
-        if (game == null)
+        Console.WriteLine($"GameService: PlayTurn({gameId}, {playerId}, {column})");
+
+        // Charger le jeu et ses relations
+        var efGame = await _gameRepository.GetGameWithGridAsync(gameId);
+        if (efGame == null)
         {
             throw new ArgumentException("Game not found");
         }
         
-        var player = await _playerRepository.GetByIdAsync(playerId);
-        if (player == null)
+        if (efGame.Status != EFGame.Statuses.InProgress)
+        {
+            throw new InvalidOperationException("Game is not in progress");
+        }
+
+        if (efGame.Grid == null)
+        {
+            throw new InvalidOperationException("Grid is not initialized for this game.");
+        }
+
+        var efPlayer = await _playerRepository.GetByIdAsync(playerId);
+        if (efPlayer == null)
         {
             throw new ArgumentException("Player not found");
         }
 
-        var gameDomain = GameMapper.ToDomain(game);
-        gameDomain.PlayTurn(PlayerMapper.ToDomain(player), column);
-    
-        game.WinnerId = gameDomain.Winner?.Id;
-        game.CurrentTurnId = gameDomain.CurrentTurn?.Id;
-        game.Status = gameDomain.Status;
-    
-        await _gameRepository.UpdateAsync(game);
-    
-        return GameMapper.ToDto(game);
+        // Mapper EFGame vers Domain Model
+        var gameDomain = GameMapper.ToDomain(efGame);
+
+        // Logique métier : jouer un tour
+        gameDomain.PlayTurn(PlayerMapper.ToDomain(efPlayer), column);
+
+        // Synchroniser les cellules modifiées ou ajoutées
+        foreach (var domainCell in gameDomain.Grid.Cells)
+        {
+            if (domainCell.Token != null) // Seules les cellules avec un token sont traitées
+            {
+                var existingCell = efGame.Grid.Cells
+                    .FirstOrDefault(c => c.Row == domainCell.Row && c.Column == domainCell.Column);
+
+                if (existingCell == null)
+                {
+                    // Ajouter une nouvelle cellule avec un token
+                    var newCell = CellMapper.ToEntity(domainCell, efGame.Id);
+                    efGame.Grid.Cells.Add(newCell);
+                }
+                else
+                {
+                    // Mettre à jour la cellule existante
+                    existingCell.TokenColor = domainCell.Token.Color;
+                }
+            }
+        }
+
+        // Synchroniser les propriétés principales de EFGame
+        efGame.WinnerId = gameDomain.Winner?.Id;
+        efGame.CurrentTurnId = gameDomain.CurrentTurn?.Id;
+        efGame.Status = gameDomain.Status;
+
+        // Mettre à jour l'entité principale
+        await _gameRepository.UpdateAsync(efGame);
+
+        return GameMapper.ToDto(efGame);
     }
+
 
     public async Task<GameDto?> GetGameById(int id)
     {

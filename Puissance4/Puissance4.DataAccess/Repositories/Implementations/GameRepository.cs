@@ -17,7 +17,6 @@ public class GameRepository : Repository<EFGame>, IGameRepository
             .Include(g => g.CurrentTurn)
             .Include(g => g.Grid)
             .ThenInclude(grid => grid.Cells)
-            .ThenInclude(cell => cell.Token)
             .FirstOrDefaultAsync(g => g.Id == gameId);
     }
 

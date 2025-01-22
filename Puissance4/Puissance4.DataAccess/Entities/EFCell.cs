@@ -10,6 +10,5 @@ public class EFCell
     public int GridId { get; set; }
     public EFGrid Grid { get; set; }
     
-    // Relation avec Token
-    public EFToken Token { get; set; } // Jeton (facultatif)
+    public required string TokenColor { get; set; }
 }

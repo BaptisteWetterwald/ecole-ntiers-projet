@@ -10,7 +10,6 @@ public class Puissance4DbContext : DbContext
     public DbSet<EFGame> Games { get; set; }
     public DbSet<EFGrid> Grids { get; set; }
     public DbSet<EFCell> Cells { get; set; }
-    public DbSet<EFToken> Tokens { get; set; }
     
     public Puissance4DbContext(DbContextOptions<Puissance4DbContext> options) : base(options) { }
 
@@ -56,13 +55,10 @@ public class Puissance4DbContext : DbContext
             .HasOne(c => c.Grid)
             .WithMany(g => g.Cells)
             .HasForeignKey(c => c.GridId);
-        
-        // Cell - Token relation
+
         modelBuilder.Entity<EFCell>()
-            .HasOne(c => c.Token)
-            .WithOne()
-            .HasForeignKey<EFCell>(c => c.Id)
-            .OnDelete(DeleteBehavior.Cascade);
+            .Property(c => c.TokenColor)
+            .IsRequired();
     }
 
     

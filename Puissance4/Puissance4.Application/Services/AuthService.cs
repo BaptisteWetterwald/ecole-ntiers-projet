@@ -12,6 +12,18 @@ namespace Puissance4.Application.Services;
 
 public class AuthService
 {
+    
+    /* Postman
+    {
+        "username": "Baptouste",
+        "password": "#qlflop"
+    }
+    {
+        "username": "Kepplouf",
+        "password": "Thomsoja"
+    }
+    */
+    
     private readonly IConfiguration _configuration;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IPlayerRepository _playerRepository;

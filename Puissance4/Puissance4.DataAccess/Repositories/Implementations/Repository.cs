@@ -42,5 +42,9 @@ public class Repository<T> : IRepository<T> where T : class
             _context.Set<T>().Remove(entity);
             await _context.SaveChangesAsync();
         }
+        else
+        {
+            throw new InvalidOperationException($"Entity of type {typeof(T).Name} with id {id} not found.");
+        }
     }
 }

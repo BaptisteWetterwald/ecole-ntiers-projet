@@ -10,17 +10,23 @@ public static class CellMapper
     {
         return new Cell(entity.Row, entity.Column)
         {
-            Token = entity.Token != null ? TokenMapper.ToDomain(entity.Token) : null
+            Token = new Token(entity.TokenColor)
         };
     }
 
-    public static EFCell ToEntity(Cell domain)
+    public static EFCell ToEntity(Cell cell, int gridId)
     {
+        if (cell.Token == null)
+        {
+            throw new InvalidOperationException("A cell cannot be saved without a token.");
+        }
+
         return new EFCell
         {
-            Row = domain.Row,
-            Column = domain.Column,
-            Token = domain.Token != null ? TokenMapper.ToEntity(domain.Token) : null
+            Row = cell.Row,
+            Column = cell.Column,
+            GridId = gridId,
+            TokenColor = cell.Token.Color
         };
     }
     
@@ -40,7 +46,7 @@ public static class CellMapper
         {
             Row = entity.Row,
             Column = entity.Column,
-            TokenColor = entity.Token?.Color
+            TokenColor = entity.TokenColor
         };
     }
 }

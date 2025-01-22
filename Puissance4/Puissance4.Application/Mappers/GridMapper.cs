@@ -42,13 +42,11 @@ public static class GridMapper
             Cells = new List<EFCell>()
         };
         
-        for (int row = 0; row < grid.Rows; row++)
+        foreach (var cell in grid.Cells)
         {
-            for (int column = 0; column < grid.Columns; column++)
+            if (cell.Token != null) // Sauvegarder uniquement les cellules avec un token
             {
-                var cell = grid.Cells[row, column];
-                if (cell.Token == null) continue;
-                efGrid.Cells.Add(CellMapper.ToEntity(cell));
+                efGrid.Cells.Add(CellMapper.ToEntity(cell, efGrid.Id));
             }
         }
         
@@ -76,17 +74,12 @@ public static class GridMapper
     
     public static GridDto ToDto(EFGrid efGrid)
     {
-        var cells = new List<CellDto>();
-        foreach (var efCell in efGrid.Cells)
-        {
-            cells.Add(CellMapper.ToDto(efCell));
-        }
-        
+        var cellsDto = efGrid.Cells.Select(CellMapper.ToDto).ToList();
         return new GridDto
         {
             Rows = efGrid.Rows,
             Columns = efGrid.Columns,
-            Cells = cells
+            Cells = cellsDto
         };
     }
 }

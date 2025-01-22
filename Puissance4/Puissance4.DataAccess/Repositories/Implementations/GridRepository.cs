@@ -12,7 +12,6 @@ public class GridRepository : Repository<EFGrid>, IGridRepository
     {
         return await _context.Grids
             .Include(g => g.Cells)
-            .ThenInclude(cell => cell.Token)
             .FirstOrDefaultAsync(g => g.Id == gridId);
     }
 }
