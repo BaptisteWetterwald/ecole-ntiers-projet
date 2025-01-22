@@ -1,0 +1,77 @@
+﻿@page "/login"
+@using System.Text.Json
+@using Blazored.LocalStorage
+@inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
+@inject ILocalStorageService LocalStorage
+
+<h3>Login</h3>
+
+@if (LoginFailed)
+{
+    <p style="color: red;">Invalid username or password. Please try again.</p>
+}
+
+<div class="login-container">
+    <form class="login-form">
+        <!-- Username -->
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input id="username" type="text" class="form-control" @bind="Username" placeholder="Enter your username" required />
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input id="password" type="password" class="form-control" @bind="Password" placeholder="Enter your password" required />
+        </div>
+
+        <!-- Login Button -->
+        <button type="button" class="btn btn-primary btn-login" @onclick="HandleLogin">Login</button>
+    </form>
+
+    <!-- Optional: Link for signup or forgot password -->
+    <p class="signup-link">
+        Don't have an account? <a href="/signup">Sign up</a>
+    </p>
+</div>
+
+@code {
+    private string Username { get; set; }
+    private string Password { get; set; }
+    private bool LoginFailed { get; set; }
+
+    private async Task HandleLogin()
+    {
+        LoginFailed = false;
+
+        try
+        {
+            var response = await HttpClient.PostAsJsonAsync("auth/login", new { Username, Password });
+
+            if (response.IsSuccessStatusCode)
+            {
+                // The response is a json like { "type": "Bearer", "token": "your_token_here" }
+                var content = await response.Content.ReadAsStringAsync();
+                var token = JsonSerializer.Deserialize<Dictionary<string, string>>(content)?["token"];
+                
+                if (string.IsNullOrEmpty(token)) throw new Exception("Invalid token format");
+                
+                // Stocker le token dans le stockage local ou session
+                await LocalStorage.SetItemAsync("authToken", token);
+
+                // Naviguer vers la page principale ou autre
+                NavigationManager.NavigateTo("/");
+            }
+            else
+            {
+                LoginFailed = true; // Afficher un message d'erreur
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+            LoginFailed = true;
+        }
+    }
+}

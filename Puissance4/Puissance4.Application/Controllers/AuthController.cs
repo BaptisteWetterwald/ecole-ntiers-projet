@@ -19,6 +19,10 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
     {
+
+        Console.WriteLine("AuthController: Login(" + loginDto.Username + ")");
+        Console.WriteLine("Password: " + loginDto.Password);
+        
         var correctPwd = await _authService.VerifyPassword(loginDto);
         if (!correctPwd)
         {

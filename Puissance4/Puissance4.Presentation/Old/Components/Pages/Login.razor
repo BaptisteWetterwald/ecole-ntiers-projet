@@ -1,0 +1,73 @@
+﻿@page "/login"
+@using Microsoft.AspNetCore.Components.Authorization
+@using Puissance4.Presentation.Services
+@inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<h3>Login</h3>
+
+<h1>Token: <span @bind="Token"></span></h1>
+
+<div class="login-container">
+    <form class="login-form">
+        <!-- Username -->
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input id="username" type="text" class="form-control" @bind="Username" placeholder="Enter your username" required/>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input id="password" type="password" class="form-control" @bind="Password" placeholder="Enter your password" required />
+        </div>
+
+        <!-- Login Button -->
+        <button type="button" class="btn btn-primary btn-login" @onclick="HandleLogin">Login</button>
+    </form>
+
+    <!-- Optional: Link for signup or forgot password -->
+    <p class="signup-link">
+        Don't have an account? <a href="/signup">Sign up</a>
+    </p>
+
+    <button type="button" @onclick="TestClick">Test Button</button>
+</div>
+
+@code {
+    private string Username { get; set; }
+    private string Password { get; set; }
+    private string Token { get; set; }
+
+    private async Task HandleLogin()
+    {
+
+        Console.WriteLine("Username: " + Username);
+        Console.WriteLine("Password: " + Password);
+        
+        var response = await HttpClient.PostAsJsonAsync("auth/login", new { Username, Password });
+
+        if (response.IsSuccessStatusCode)
+        {
+            var token = await response.Content.ReadAsStringAsync();
+
+            Console.WriteLine("Read token: " + token);
+            Token = token;
+            
+            // Appeler l'API d'authentification et récupérer le token
+            var jwtProvider = (JwtAuthenticationStateProvider)AuthenticationStateProvider;
+            await jwtProvider.MarkUserAsAuthenticated(token);
+        }
+        else
+        {
+            Console.WriteLine("Login failed");
+            NavigationManager.NavigateTo("/loginblabla");
+        }
+    }
+    
+    private async Task TestClick()
+    {
+        Console.WriteLine("Button clicked!");
+    }
+}

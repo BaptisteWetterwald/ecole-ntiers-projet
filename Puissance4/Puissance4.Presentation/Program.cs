@@ -1,33 +1,33 @@
-using Puissance4.Presentation.Components;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Puissance4.Presentation;
+using Blazored.LocalStorage;
+using Puissance4.Presentation.Services;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebAssemblyHostBuilder.CreateDefault(args);
+builder.RootComponents.Add<App>("#app");
+builder.RootComponents.Add<HeadOutlet>("head::after");
 
-// Add services to the container.
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+// Ajouter le stockage local pour gérer les tokens JWT
+builder.Services.AddBlazoredLocalStorage();
 
-builder.Services.AddHttpClient("Puissance4API", client =>
+// Ajouter le gestionnaire HTTP authentifié
+builder.Services.AddScoped<AuthenticatedHttpClientHandler>();
+
+// Ajouter le service d'authentification
+builder.Services.AddScoped<AuthService>();
+
+// Configurer le HttpClient pour l'API
+builder.Services.AddHttpClient("API", client =>
 {
-    client.BaseAddress = new Uri("https://localhost:5001/api/");
+    client.BaseAddress = new Uri("https://localhost:7164/api/"); // URL de l'API
+}).AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
+
+// Configurer un HttpClient par défaut pour d'autres requêtes
+builder.Services.AddScoped(sp =>
+{
+    var clientFactory = sp.GetRequiredService<IHttpClientFactory>();
+    return clientFactory.CreateClient("API"); // Utilise la configuration de l'API
 });
 
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
-
-app.UseHttpsRedirection();
-
-
-app.UseAntiforgery();
-
-app.MapStaticAssets();
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
-
-app.Run();
+await builder.Build().RunAsync();
