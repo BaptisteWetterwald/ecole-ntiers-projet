@@ -1,4 +1,5 @@
 ﻿@page "/game"
+@rendermode InteractiveServer
 
 <PageTitle>Blaze 4</PageTitle>
 
@@ -8,41 +9,20 @@
         <h1 class="title">Blaze 4</h1>
 
         <!-- Game Board -->
-        <div class="game-board">
-            @for (int row = 0; row < 7; row++)
-            {
-                <div class="row">
-                    @for (int col = 0; col < 6; col++)
-                    {
-                        <div class="cell"
-                             @onclick="() => PlaceToken(col)"
-                             style="background-color: @(GetCellContent(row, col) == "Red" ? "red" : GetCellContent(row, col) == "Yellow" ? "yellow" : isDarkTheme ? "#1e1e1e" : "#f0f0f0");">
-                        </div>
-                    }
-                </div>
-            }
-        </div>
+        <GameBoard Board="board"
+                   CellClicked="PlaceToken"
+                   IsDarkTheme="isDarkTheme" />
 
         <!-- Current Player -->
         <p class="current-player">Current Player: <span>@currentPlayer</span></p>
-        
     </main>
 </div>
 
 @code {
-    private string[,] board = new string[7, 6]; // Board state
+    private string[,] board = new string[6, 7]; // Board state
     private string currentPlayer = "Red"; // Current player's color
     private bool isDarkTheme = false; // Theme state
 
-    // Toggle between dark and light themes
-
-    // Get the content of a cell
-    private string GetCellContent(int row, int col)
-    {
-        return board[row, col];
-    }
-
-    // Place a token in the selected column
     private void PlaceToken(int col)
     {
         for (int row = 5; row >= 0; row--)
@@ -58,7 +38,4 @@
 
         Console.WriteLine("Column is full!");
     }
-
-    // Reset the game board
-
 }

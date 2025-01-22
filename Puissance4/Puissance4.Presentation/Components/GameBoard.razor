@@ -1,0 +1,61 @@
+﻿<h3>GameBoard</h3>
+
+<!-- Column Indicators -->
+<div class="column-indicators">
+    @for (int col = 0; col < 7; col++) 
+    {
+        <div class="indicator" @onclick="() => OnCellClicked(col)">▼</div>
+    }
+</div>
+
+<!-- Game Board -->
+<div class="game-board">
+    @for (int row = 0; row < 6; row++) 
+    {
+        <div class="row">
+            @for (int col = 0; col < 7; col++)
+        {
+            <div class="cell"
+            @onclick="() => OnCellClicked(col)"
+            style="background-color: @(GetCellContent(row, col) == "Red" ? "red" : GetCellContent(row, col) == "Yellow" ? "yellow" : IsDarkTheme ? "#1e1e1e" : "#f0f0f0");">
+                </div>
+        }
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string[,] Board { get; set; } = new string[6, 7]; // 6 lignes, 7 colonnes
+
+    [Parameter]
+    public EventCallback<int> CellClicked { get; set; }
+
+    [Parameter]
+    public bool IsDarkTheme { get; set; }
+
+    private string GetCellContent(int row, int col)
+    {
+        // Validation des indices pour éviter les exceptions
+        if (row < 0 || row >= Board.GetLength(0) || col < 0 || col >= Board.GetLength(1))
+        {
+            Console.WriteLine($"Invalid access: row={row}, col={col}");
+            return null; // Retour par défaut
+        }
+        return Board[row, col];
+    }
+
+    private async Task OnCellClicked(int col)
+    {
+        if (col < 0 || col >= Board.GetLength(1)) // Validation des colonnes
+        {
+            Console.WriteLine($"Invalid column clicked: col={col}");
+            return;
+        }
+
+        if (CellClicked.HasDelegate)
+        {
+            await CellClicked.InvokeAsync(col);
+        }
+    }
+}
