@@ -1,9 +1,7 @@
 ﻿@page "/login"
-@using System.Text.Json
-@using Blazored.LocalStorage
-@inject HttpClient HttpClient
+@using Puissance4.Presentation.Services
 @inject NavigationManager NavigationManager
-@inject ILocalStorageService LocalStorage
+@inject AuthService AuthService
 
 <h3>Login</h3>
 
@@ -47,20 +45,11 @@
 
         try
         {
-            var response = await HttpClient.PostAsJsonAsync("auth/login", new { Username, Password });
+            var success = await AuthService.Login(Username, Password);
 
-            if (response.IsSuccessStatusCode)
+            if (success)
             {
-                // The response is a json like { "type": "Bearer", "token": "your_token_here" }
-                var content = await response.Content.ReadAsStringAsync();
-                var token = JsonSerializer.Deserialize<Dictionary<string, string>>(content)?["token"];
-                
-                if (string.IsNullOrEmpty(token)) throw new Exception("Invalid token format");
-                
-                // Stocker le token dans le stockage local ou session
-                await LocalStorage.SetItemAsync("authToken", token);
-
-                // Naviguer vers la page principale ou autre
+                // Rediriger vers la page principale
                 NavigationManager.NavigateTo("/");
             }
             else
@@ -75,3 +64,4 @@
         }
     }
 }
+

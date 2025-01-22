@@ -1,4 +1,7 @@
-﻿namespace Puissance4.Presentation.Services;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Components;
+
+namespace Puissance4.Presentation.Services;
 
 using System.Net.Http.Json;
 using Blazored.LocalStorage;
@@ -19,7 +22,11 @@ public class AuthService
         var response = await _httpClient.PostAsJsonAsync("auth/login", new { Username = username, Password = password });
         if (response.IsSuccessStatusCode)
         {
-            var token = await response.Content.ReadAsStringAsync();
+            var content = await response.Content.ReadAsStringAsync();
+            var token = JsonSerializer.Deserialize<Dictionary<string, string>>(content)?["token"];
+                
+            if (string.IsNullOrEmpty(token)) throw new Exception("Invalid token format");
+            
             await _localStorage.SetItemAsync("authToken", token);
             return true;
         }

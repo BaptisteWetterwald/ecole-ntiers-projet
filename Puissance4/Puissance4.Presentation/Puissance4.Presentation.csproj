@@ -16,7 +16,36 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Old\" />
+      <Compile Remove="Old\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Old\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="Old\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Old\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Old\Components\App.razor" />
+      <_ContentIncludedByDefault Remove="Old\Components\GameBoard.razor" />
+      <_ContentIncludedByDefault Remove="Old\Components\Layout\MainLayout.razor" />
+      <_ContentIncludedByDefault Remove="Old\Components\Layout\NavMenu.razor" />
+      <_ContentIncludedByDefault Remove="Old\Components\Modal.razor" />
+      <_ContentIncludedByDefault Remove="Old\Components\Pages\Counter.razor" />
+      <_ContentIncludedByDefault Remove="Old\Components\Pages\Error.razor" />
+      <_ContentIncludedByDefault Remove="Old\Components\Pages\Game.razor" />
+      <_ContentIncludedByDefault Remove="Old\Components\Pages\GameList.razor" />
+      <_ContentIncludedByDefault Remove="Old\Components\Pages\Home.razor" />
+      <_ContentIncludedByDefault Remove="Old\Components\Pages\Login.razor" />
+      <_ContentIncludedByDefault Remove="Old\Components\Pages\SignUp.razor" />
+      <_ContentIncludedByDefault Remove="Old\Components\Pages\Weather.razor" />
+      <_ContentIncludedByDefault Remove="Old\Components\Routes.razor" />
     </ItemGroup>
 
 </Project>
