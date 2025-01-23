@@ -1,0 +1,25 @@
+﻿@using Puissance4.OldPresentation2.Layout
+@using Puissance4.OldPresentation2.Services
+<Router AppAssembly="@typeof(App).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+    <NotFound>
+        <RedirectToLogin />
+    </NotFound>
+</Router>
+
+@code {
+    [Inject]
+    private AuthService AuthService { get; set; }
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var isAuthenticated = await AuthService.IsAuthenticated();
+        NavigationManager.NavigateTo(isAuthenticated ? "/games" : "/login");
+    }
+}

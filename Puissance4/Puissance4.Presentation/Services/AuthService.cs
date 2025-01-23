@@ -1,10 +1,8 @@
-﻿using System.Text.Json;
-using Microsoft.AspNetCore.Components;
-
-namespace Puissance4.Presentation.Services;
-
+using System.Text.Json;
 using System.Net.Http.Json;
 using Blazored.LocalStorage;
+
+namespace Puissance4.Presentation.Services;
 
 public class AuthService
 {
@@ -37,4 +35,11 @@ public class AuthService
     {
         await _localStorage.RemoveItemAsync("authToken");
     }
+    
+    public async Task<bool> IsAuthenticated()
+    {
+        var token = await _localStorage.GetItemAsync<string>("authToken");
+        return !string.IsNullOrEmpty(token);
+    }
+
 }

@@ -1,21 +1,13 @@
-﻿@page "/login"
-@using Puissance4.Presentation.Services
-@inject NavigationManager NavigationManager
-@inject AuthService AuthService
+@page "/login"
 
 <h3>Login</h3>
-
-@if (LoginFailed)
-{
-    <p style="color: red;">Invalid username or password. Please try again.</p>
-}
 
 <div class="login-container">
     <form class="login-form">
         <!-- Username -->
         <div class="form-group">
             <label for="username">Username</label>
-            <input id="username" type="text" class="form-control" @bind="Username" placeholder="Enter your username" required />
+            <input id="username" type="text" class="form-control" @bind="Username" placeholder="Enter your username" required/>
         </div>
 
         <!-- Password -->
@@ -32,36 +24,16 @@
     <p class="signup-link">
         Don't have an account? <a href="/signup">Sign up</a>
     </p>
+
 </div>
 
 @code {
     private string Username { get; set; }
     private string Password { get; set; }
-    private bool LoginFailed { get; set; }
 
     private async Task HandleLogin()
     {
-        LoginFailed = false;
-
-        try
-        {
-            var success = await AuthService.Login(Username, Password);
-
-            if (success)
-            {
-                // Rediriger vers la page principale
-                NavigationManager.NavigateTo("/");
-            }
-            else
-            {
-                LoginFailed = true; // Afficher un message d'erreur
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-            LoginFailed = true;
-        }
+        // call AuthService to login
+        Console.WriteLine("Username: " + Username);
     }
 }
-

@@ -1,7 +1,7 @@
-﻿namespace Puissance4.Presentation.Services;
-
 using System.Net.Http.Headers;
 using Blazored.LocalStorage;
+
+namespace Puissance4.Presentation.Services;
 
 public class AuthenticatedHttpClientHandler : DelegatingHandler
 {

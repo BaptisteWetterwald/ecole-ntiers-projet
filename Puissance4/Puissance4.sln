@@ -10,7 +10,13 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Puissance4.DataAccess", "Puissance4.DataAccess\Puissance4.DataAccess.csproj", "{2E76AB45-536B-47AC-A85A-6EFC802A8658}"
 EndProject
 
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Puissance4.Presentation", "Puissance4.Presentation\Puissance4.Presentation.csproj", "{B6AA7571-15B0-4D13-8D82-9464BC08ABAE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Puissance4.OldPresentation2", "Puissance4.OldPresentation2\Puissance4.OldPresentation2.csproj", "{B6AA7571-15B0-4D13-8D82-9464BC08ABAE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorApp1", "BlazorApp1\BlazorApp1\BlazorApp1.csproj", "{8CFB56BF-6C19-4159-AA89-3179113D7FFA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorApp1.Client", "BlazorApp1\BlazorApp1.Client\BlazorApp1.Client.csproj", "{3B92E0E0-2B9F-4A57-AFD0-EDF2DEC16DD6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Puissance4.Presentation", "Puissance4.Presentation\Puissance4.Presentation.csproj", "{7D158A18-DB7E-43C3-B069-87005F9E211F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,5 +47,17 @@ Global
 		{B6AA7571-15B0-4D13-8D82-9464BC08ABAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6AA7571-15B0-4D13-8D82-9464BC08ABAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6AA7571-15B0-4D13-8D82-9464BC08ABAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CFB56BF-6C19-4159-AA89-3179113D7FFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CFB56BF-6C19-4159-AA89-3179113D7FFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CFB56BF-6C19-4159-AA89-3179113D7FFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CFB56BF-6C19-4159-AA89-3179113D7FFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B92E0E0-2B9F-4A57-AFD0-EDF2DEC16DD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B92E0E0-2B9F-4A57-AFD0-EDF2DEC16DD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B92E0E0-2B9F-4A57-AFD0-EDF2DEC16DD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B92E0E0-2B9F-4A57-AFD0-EDF2DEC16DD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D158A18-DB7E-43C3-B069-87005F9E211F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D158A18-DB7E-43C3-B069-87005F9E211F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D158A18-DB7E-43C3-B069-87005F9E211F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D158A18-DB7E-43C3-B069-87005F9E211F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
