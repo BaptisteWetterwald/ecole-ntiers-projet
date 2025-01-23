@@ -3,18 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Puissance4.OldPresentation", "Puissance4.OldPresentation\Puissance4.OldPresentation.csproj", "{8141BC8E-A701-4999-8B1E-C8717F0F1E9E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Puissance4.Application", "Puissance4.Application\Puissance4.Application.csproj", "{01FE5B62-18C9-4590-9946-738F005B7050}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Puissance4.DataAccess", "Puissance4.DataAccess\Puissance4.DataAccess.csproj", "{2E76AB45-536B-47AC-A85A-6EFC802A8658}"
-EndProject
-
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Puissance4.OldPresentation2", "Puissance4.OldPresentation2\Puissance4.OldPresentation2.csproj", "{B6AA7571-15B0-4D13-8D82-9464BC08ABAE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorApp1", "BlazorApp1\BlazorApp1\BlazorApp1.csproj", "{8CFB56BF-6C19-4159-AA89-3179113D7FFA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorApp1.Client", "BlazorApp1\BlazorApp1.Client\BlazorApp1.Client.csproj", "{3B92E0E0-2B9F-4A57-AFD0-EDF2DEC16DD6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Puissance4.Presentation", "Puissance4.Presentation\Puissance4.Presentation.csproj", "{7D158A18-DB7E-43C3-B069-87005F9E211F}"
 EndProject
