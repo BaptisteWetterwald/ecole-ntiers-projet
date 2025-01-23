@@ -94,7 +94,6 @@ Ce projet gère l’interface utilisateur via Blazor WASM. Il communique avec l�
 
 - **Composants** :
     - `App.razor` : Point d’entrée de l’application.
-    - `GameBoard.razor` : Représentation graphique du plateau.
     - `Modal.razor`, `RedirectToLogin.cs` : Gestion des modales et des redirections.
 
 - **Services** :
