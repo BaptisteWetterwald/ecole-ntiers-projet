@@ -85,13 +85,6 @@ h1:focus {
     display: contents; /* Permet d'utiliser grid sans div inutiles */
 }
 
-.cell[style*="red"] {
-    background-color: red; /* Remplace le rouge statique */
-}
-
-.cell[style*="yellow"] {
-    background-color: yellow; /* Remplace le jaune statique */
-}
 
 @keyframes hoverGlow {
     0% {
@@ -124,6 +117,40 @@ h1:focus {
     border: 4px solid #444; /* Bordure légèrement plus épaisse */
 }
 
+/*.cell {*/
+/*    width: 80px;*/
+/*    height: 80px;*/
+/*    border-radius: 50%; !* Forme circulaire *!*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*    background: radial-gradient(circle, #1e1e1e, #111); !* Dégradé élégant *!*/
+/*    border: 3px solid #555; !* Bordure fine autour des cellules *!*/
+/*    cursor: pointer;*/
+/*    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;*/
+/*}*/
+
+/*.cell:hover {*/
+/*    transform: scale(1.2); !* Mise en avant plus visible au survol *!*/
+/*    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);*/
+/*}*/
+
+/*.cell[style*="red"], .cell[style*="yellow"] {*/
+/*    animation: drop 0.5s ease-out;*/
+/*    box-shadow: 0 0 10px rgba(255, 0, 0, 0.6), 0 0 20px rgba(255, 0, 0, 0.3); !* Rouge pour les rouges *!*/
+/*}*/
+
+/*.cell[style*="yellow"] {*/
+/*    box-shadow: 0 0 10px rgba(255, 255, 0, 0.6), 0 0 20px rgba(255, 255, 0, 0.3); !* Jaune pour les jaunes *!*/
+/*}*/
+
+/*.cell[style*="red"] {*/
+/*    background-color: red; !* Remplace le rouge statique *!*/
+/*}*/
+
+/*.cell[style*="yellow"] {*/
+/*    background-color: yellow; !* Remplace le jaune statique *!*/
+/*}*/
 
 .cell {
     width: 80px;
@@ -132,24 +159,27 @@ h1:focus {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: radial-gradient(circle, #1e1e1e, #111); /* Dégradé élégant */
+    background-color: #f0f0f0; /* Couleur par défaut pour les cellules vides */
     border: 3px solid #555; /* Bordure fine autour des cellules */
     cursor: pointer;
     transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+.cell.red {
+    background-color: #d9534f; /* Rouge plus sombre et moins agressif */
+    box-shadow: 0 0 5px rgba(217, 83, 79, 0.4), 0 0 10px rgba(217, 83, 79, 0.2); /* Effet visuel atténué */
+}
+
+.cell.yellow {
+    background-color: #f0ad4e; /* Jaune plus sombre et doux */
+    box-shadow: 0 0 5px rgba(240, 173, 78, 0.4), 0 0 10px rgba(240, 173, 78, 0.2); /* Effet visuel atténué */
+}
+
+
+
 .cell:hover {
-    transform: scale(1.2); /* Mise en avant plus visible au survol */
+    transform: scale(1.1); /* Mise en avant au survol */
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
-}
-
-.cell[style*="red"], .cell[style*="yellow"] {
-    animation: drop 0.5s ease-out;
-    box-shadow: 0 0 10px rgba(255, 0, 0, 0.6), 0 0 20px rgba(255, 0, 0, 0.3); /* Rouge pour les rouges */
-}
-
-.cell[style*="yellow"] {
-    box-shadow: 0 0 10px rgba(255, 255, 0, 0.6), 0 0 20px rgba(255, 255, 0, 0.3); /* Jaune pour les jaunes */
 }
 
 

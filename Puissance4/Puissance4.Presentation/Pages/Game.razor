@@ -35,32 +35,25 @@
                 </div>
 
                 <!-- Game Board -->
+                <!-- Game Board -->
                 <div class="game-board">
                     @for (var row = 0; row < game.Grid.Rows; row++)
                     {
                         <div class="row">
                             @for (var col = 0; col < game.Grid.Columns; col++)
                             {
-                                // print the cell
-
                                 var currentRow = row;
                                 var currentCol = col;
                                 var cell = game.Grid.Cells.FirstOrDefault(c => c.Row == currentRow && c.Column == currentCol);
-                                var tokenColor = cell?.TokenColor;
-                                var color = tokenColor switch
-                                {
-                                    "Red" => "red",
-                                    "Yellow" => "yellow",
-                                    _ => IsDarkTheme ? "white" : "black"
-                                };
-                                <div class="cell"
-                                     style="background-color: @(tokenColor == null ? "white" : color)"
-                                     @onclick="@(() => PlaceToken(currentCol))">
+                                var tokenColorClass = cell?.TokenColor?.ToLower(); // Ex : "red", "yellow", ou null pour aucune couleur
+
+                                <div class="cell @(tokenColorClass)" @onclick="@(() => PlaceToken(currentCol))">
                                 </div>
                             }
                         </div>
                     }
                 </div>
+
             </div>
 
             @if (errorMessage != null)
@@ -73,17 +66,16 @@
             <p><em>Loading game...</em></p>
         }
     </main>
-    <!-- Button to switch dark/light -->
-    <button class="button" @onclick="() => IsDarkTheme = !IsDarkTheme">Switch Theme</button>
 </div>
+
 
 @code {
     [Parameter] public int Id { get; set; }
 
     private GameDto? game;
     private string? errorMessage;
-    private bool IsDarkTheme { get; set; }
     private PlayerDto? user;
+    private CancellationTokenSource? refreshTokenSource;
 
     protected override async Task OnInitializedAsync()
     {
@@ -92,18 +84,13 @@
             // Fetch the game details from the API
             game = await GameService.GetGameByIdAsync(Id);
 
-            /*if (game == null)
-            {
-                Console.WriteLine("Game not found");
-                NavigationManager.NavigateTo("/games");
-            }*/
-
             var login = await AuthService.GetClaimAsync("sub") as string;
-            // get the playerdto from the GameDto
             user = game?.Host.Login == login ? game?.Host : game?.Guest;
 
-            errorMessage = null;            
-            
+            errorMessage = null;
+
+            // Start automatic refresh
+            StartGameRefresh();
         }
         catch (Exception ex)
         {
@@ -125,7 +112,6 @@
 
             if (success)
             {
-                // Reload the game state after playing a move
                 game = await GameService.GetGameByIdAsync(Id);
                 errorMessage = null;
                 StateHasChanged();
@@ -141,4 +127,50 @@
         }
     }
 
+    private void StartGameRefresh()
+    {
+        // Annule les rafraîchissements précédents si existants
+        refreshTokenSource?.Cancel();
+        refreshTokenSource = new CancellationTokenSource();
+
+        // Lance une tâche de rafraîchissement
+        _ = Task.Run(async () =>
+        {
+            while (game?.Status == "In Progress" && !refreshTokenSource.Token.IsCancellationRequested)
+            {
+                try
+                {
+                    await Task.Delay(400, refreshTokenSource.Token);
+
+                    // Vérifie que la tâche n'a pas été annulée avant de continuer
+                    if (!refreshTokenSource.Token.IsCancellationRequested)
+                    {
+                        game = await GameService.GetGameByIdAsync(Id);
+                        StateHasChanged();
+                    }
+                }
+                catch (TaskCanceledException)
+                {
+                    // Ignore l'annulation prévue
+                }
+                catch (Exception ex)
+                {
+                    errorMessage = $"Error refreshing game state: {ex.Message}";
+                    StateHasChanged();
+                }
+            }
+        }, refreshTokenSource.Token);
+    }
+
+    protected override void OnParametersSet()
+    {
+        // Redémarre la tâche de rafraîchissement si les paramètres changent
+        StartGameRefresh();
+    }
+
+    public void Dispose()
+    {
+        // Annule les tâches en cours lorsque l'utilisateur quitte la page
+        refreshTokenSource?.Cancel();
+    }
 }
