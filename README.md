@@ -3,15 +3,16 @@
 ## Membres du groupe
 - **Baptiste WETTERWALD**
 - **Thomas KEPPLER**
-- **(Gauthier CETINGOZ)**
+- **Gauthier CETINGOZ**
 
 ## Architecture
 
-Blaze4 est une application N-tiers structurée en quatre projets principaux :
+Blaze4 est une application N-tiers divisée en quatre projets, dont 3 tiers principaux : applicatif, base de données et frontend.
+
 1. **Puissance4.Application** : Gestion de la logique métier et API REST
 2. **Puissance4.DataAccess** : Accès à la base de données via Entity Framework Core
-3. **Puissance4.DTOs** : Modèles de données partagés entre l'API et le front-end
-4. **Puissance4.Presentation** : Front-end en Blazor WASM
+3. **Puissance4.Presentation** : Front-end en Blazor WASM
+4. **Puissance4.DTOs** : Modèles de données partagés entre l'API et le front-end
 
 ### Vue d'ensemble des projets
 
@@ -59,7 +60,7 @@ Ce projet gère l’accès à la base de données SQLite via Entity Framework Co
 
 - **Autres composants** :
     - `DataAccessConfiguration.cs` : Configure les repositories et la connexion à la DB.
-    - `DbInitializer.cs` : Initialise les utilisateurs dans la DB avec des comptes prédéfinis :
+    - `DbInitializer.cs` : Initialise les utilisateurs dans la DB avec des comptes prédéfinis (Username / Password) :
         - `Baptouste` / `#qlflop`
         - `Mehmett` / `ChefMehmett`
         - `Kepplouf` / `Thomsoja`
@@ -157,4 +158,5 @@ dotnet ef database update --project Puissance4.DataAccess
 ## Remarque
 
 Le front n'étant pas la priorité du projet, certaines fonctionnalités ne sont pas très ergonomiques, ex : la grille ne s'actualise pas automatiquement après un coup adverse. Il est nécessaire de rafraîchir la page pour voir les changements.
+
 L'accent a été mis sur la logique métier et la communication entre les différents projets.
