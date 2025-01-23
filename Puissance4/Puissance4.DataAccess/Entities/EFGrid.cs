@@ -16,26 +16,22 @@ public class EFGrid
         var sb = new StringBuilder();
         sb.AppendLine();
         var cells = new string[Rows, Columns];
-        for (int i=0; i<Rows; i++)
+        for (var i = 0; i < Rows; i++)
+        for (var j = 0; j < Columns; j++)
+            cells[i, j] = ".";
+
+        foreach (var cell in Cells) cells[cell.Row, cell.Column] = cell.TokenColor;
+        for (var i = 0; i < Rows; i++)
         {
-            for (int j=0; j<Columns; j++)
-            {
-                cells[i, j] = ".";
-            }
-        }
-        foreach (var cell in Cells)
-        {
-            cells[cell.Row, cell.Column] = cell.TokenColor;
-        }
-        for (int i=0; i<Rows; i++)
-        {
-            for (int j=0; j<Columns; j++)
+            for (var j = 0; j < Columns; j++)
             {
                 sb.Append(cells[i, j]);
                 sb.Append('|');
             }
+
             sb.AppendLine();
         }
+
         return sb.ToString();
     }
 }

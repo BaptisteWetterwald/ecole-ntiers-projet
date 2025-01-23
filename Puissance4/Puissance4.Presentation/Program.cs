@@ -1,9 +1,9 @@
+using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Blazored.LocalStorage;
 using Puissance4.Presentation;
 using Puissance4.Presentation.Services;
-using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -25,10 +25,8 @@ builder.Services.AddScoped<PlayerService>();
 builder.Services.AddAuthorizationCore();
 
 // Configurer HttpClient pour appeler ton API
-builder.Services.AddHttpClient("API", client =>
-{
-    client.BaseAddress = new Uri("https://localhost:7164/api/");
-}).AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
+builder.Services.AddHttpClient("API", client => { client.BaseAddress = new Uri("https://localhost:7164/api/"); })
+    .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
 
 // Fournir le HttpClient configuré pour l'application
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("API"));

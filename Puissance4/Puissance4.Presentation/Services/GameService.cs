@@ -15,22 +15,22 @@ public class GameService
     // Récupérer la liste des parties
     public async Task<List<GameDto>> GetAllGamesAsync()
     {
-        return await _httpClient.GetFromJsonAsync<List<GameDto>>("games") 
+        return await _httpClient.GetFromJsonAsync<List<GameDto>>("games")
                ?? new List<GameDto>();
     }
-    
+
     public async Task<List<GameDto>> GetPendingGamesAsync()
     {
-        return await _httpClient.GetFromJsonAsync<List<GameDto>>("games/pending") 
+        return await _httpClient.GetFromJsonAsync<List<GameDto>>("games/pending")
                ?? new List<GameDto>();
     }
-    
+
     public async Task<List<GameDto>> GetGamesOfPlayerAsync()
     {
-        return await _httpClient.GetFromJsonAsync<List<GameDto>>("games/player") 
+        return await _httpClient.GetFromJsonAsync<List<GameDto>>("games/player")
                ?? new List<GameDto>();
     }
-    
+
     // Récupérer une partie spécifique
     public async Task<GameDto?> GetGameByIdAsync(int gameId)
     {
@@ -50,11 +50,11 @@ public class GameService
         var response = await _httpClient.PostAsync($"games/{gameId}/join", null);
         return response.IsSuccessStatusCode;
     }
-    
+
     // Jouer un coup
     public async Task<bool> PlayMoveAsync(int gameId, int column)
     {
-        PlayTurnDto playTurnDto = new PlayTurnDto { Column = column };
+        var playTurnDto = new PlayTurnDto { Column = column };
         var response = await _httpClient.PostAsJsonAsync($"games/{gameId}/play", playTurnDto);
         return response.IsSuccessStatusCode;
     }

@@ -1,7 +1,6 @@
 @page "/games/{Id:int}"
 @using Puissance4.DTOs
 @inject GameService GameService
-@inject PlayerService PlayerService
 @inject NavigationManager NavigationManager
 @inject AuthService AuthService
 
@@ -29,7 +28,7 @@
             <div class="game-board-container">
                 <!-- Column Indicators -->
                 <div class="column-indicators">
-                    @for (int col = 0; col < game.Grid.Columns; col++)
+                    @for (var col = 0; col < game.Grid.Columns; col++)
                     {
                         <div class="indicator" @onclick="@(() => PlaceToken(col))">▼</div>
                     }
@@ -43,7 +42,7 @@
                             @for (var col = 0; col < game.Grid.Columns; col++)
                             {
                                 // print the cell
-                                
+
                                 var currentRow = row;
                                 var currentCol = col;
                                 var cell = game.Grid.Cells.FirstOrDefault(c => c.Row == currentRow && c.Column == currentCol);
@@ -52,7 +51,7 @@
                                 {
                                     "Red" => "red",
                                     "Yellow" => "yellow",
-                                    _ => isDarkTheme ? "black" : "white"
+                                    _ => IsDarkTheme ? "white" : "black"
                                 };
                                 <div class="cell"
                                      style="background-color: @(tokenColor == null ? "white" : color)"
@@ -75,18 +74,16 @@
         }
     </main>
     <!-- Button to switch dark/light -->
-    <button class="button" @onclick="() => isDarkTheme = !isDarkTheme">Switch Theme</button>
+    <button class="button" @onclick="() => IsDarkTheme = !IsDarkTheme">Switch Theme</button>
 </div>
 
 @code {
-    [Parameter]
-    public int Id { get; set; }
+    [Parameter] public int Id { get; set; }
 
     private GameDto? game;
     private string? errorMessage;
-    private bool isDarkTheme = true;
+    private bool IsDarkTheme { get; set; }
     private PlayerDto? user;
-    private string MyLogin;
 
     protected override async Task OnInitializedAsync()
     {
@@ -95,14 +92,18 @@
             // Fetch the game details from the API
             game = await GameService.GetGameByIdAsync(Id);
 
-            if (game == null)
+            /*if (game == null)
             {
+                Console.WriteLine("Game not found");
                 NavigationManager.NavigateTo("/games");
-            }
+            }*/
 
-            string? login = await AuthService.GetClaimAsync("sub") as string;
+            var login = await AuthService.GetClaimAsync("sub") as string;
             // get the playerdto from the GameDto
             user = game?.Host.Login == login ? game?.Host : game?.Guest;
+
+            errorMessage = null;            
+            
         }
         catch (Exception ex)
         {
@@ -127,6 +128,7 @@
                 // Reload the game state after playing a move
                 game = await GameService.GetGameByIdAsync(Id);
                 errorMessage = null;
+                StateHasChanged();
             }
             else
             {
@@ -138,4 +140,5 @@
             errorMessage = $"Error placing token: {ex.Message}";
         }
     }
+
 }

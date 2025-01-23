@@ -6,7 +6,9 @@ namespace Puissance4.DataAccess.Repositories.Implementations;
 
 public class GameRepository : Repository<EFGame>, IGameRepository
 {
-    public GameRepository(Puissance4DbContext context) : base(context) { }
+    public GameRepository(Puissance4DbContext context) : base(context)
+    {
+    }
 
     public async Task<EFGame?> GetGameWithGridAsync(int gameId)
     {

@@ -12,7 +12,6 @@ namespace Puissance4.Application.Services;
 
 public class AuthService
 {
-    
     /* Postman
     {
         "username": "Baptouste",
@@ -23,27 +22,25 @@ public class AuthService
         "password": "Thomsoja"
     }
     */
-    
+
     private readonly IConfiguration _configuration;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IPlayerRepository _playerRepository;
-    
-    public AuthService(IConfiguration configuration, IHttpContextAccessor httpContextAccessor, IPlayerRepository playerRepository)
+
+    public AuthService(IConfiguration configuration, IHttpContextAccessor httpContextAccessor,
+        IPlayerRepository playerRepository)
     {
         _configuration = configuration;
         _httpContextAccessor = httpContextAccessor;
         _playerRepository = playerRepository;
     }
-    
+
     public async Task<string> GenerateToken(string username)
     {
         var user = await _playerRepository.GetByLoginAsync(username);
-        if (user == null)
-        {
-            throw new Exception("Could not find user ID");
-        }
+        if (user == null) throw new Exception("Could not find user ID");
         var userId = user.Id;
-        
+
         var claims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Sub, username),
@@ -55,26 +52,23 @@ public class AuthService
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
-            issuer: _configuration["Jwt:Issuer"],
-            audience: _configuration["Jwt:Audience"],
-            claims: claims,
+            _configuration["Jwt:Issuer"],
+            _configuration["Jwt:Audience"],
+            claims,
             expires: DateTime.Now.AddHours(1),
             signingCredentials: creds
         );
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
-    
+
     public int GetUserId()
     {
         var userId = _httpContextAccessor.HttpContext?.User?.FindFirst("UserId")?.Value;
-        if (userId == null)
-        {
-            throw new Exception("Could not find user ID");
-        }
+        if (userId == null) throw new Exception("Could not find user ID");
         return int.Parse(userId);
     }
-    
+
     private string HashPassword(string password)
     {
         return Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(password)));
@@ -83,13 +77,10 @@ public class AuthService
     public async Task<bool> VerifyPassword(LoginDto loginDto)
     {
         var user = await _playerRepository.GetByLoginAsync(loginDto.Username);
-        if (user == null)
-        {
-            return false;
-        }
+        if (user == null) return false;
         return user.PasswordHash == HashPassword(loginDto.Password);
     }
-    
+
     public void Logout()
     {
         _httpContextAccessor.HttpContext?.SignOutAsync();
@@ -99,17 +90,14 @@ public class AuthService
     {
         // Vérifier si l'utilisateur existe déjà
         var user = _playerRepository.GetByLoginAsync(loginDto.Username).Result;
-        if (user != null)
-        {
-            throw new Exception("User already exists");
-        }
-        
+        if (user != null) throw new Exception("User already exists");
+
         var newUser = new EFPlayer
         {
             Login = loginDto.Username,
             PasswordHash = HashPassword(loginDto.Password)
         };
-        
+
         await _playerRepository.AddAsync(newUser);
     }
 }

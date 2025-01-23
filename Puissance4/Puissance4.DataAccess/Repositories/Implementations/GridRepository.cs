@@ -6,7 +6,9 @@ namespace Puissance4.DataAccess.Repositories.Implementations;
 
 public class GridRepository : Repository<EFGrid>, IGridRepository
 {
-    public GridRepository(Puissance4DbContext context) : base(context) { }
+    public GridRepository(Puissance4DbContext context) : base(context)
+    {
+    }
 
     public async Task<EFGrid?> GetGridWithCellsAsync(int gridId)
     {

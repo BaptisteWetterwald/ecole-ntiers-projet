@@ -33,19 +33,19 @@
 </div>
 
 @code {
-    private bool collapseNavMenu = true;
+    private bool _collapseNavMenu = true;
 
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-    public bool IsAuthenticated { get; set; }
+    private string? NavMenuCssClass => _collapseNavMenu ? "collapse" : null;
+    private bool IsAuthenticated { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         IsAuthenticated = await AuthService.IsAuthenticated();
     }
-    
+
     private void ToggleNavMenu()
     {
-        collapseNavMenu = !collapseNavMenu;
+        _collapseNavMenu = !_collapseNavMenu;
     }
 
 }

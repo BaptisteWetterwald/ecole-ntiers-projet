@@ -2,7 +2,7 @@
 
 <!-- Column Indicators -->
 <div class="column-indicators">
-    @for (int col = 0; col < 7; col++) 
+    @for (var col = 0; col < 7; col++)
     {
         <div class="indicator" @onclick="() => OnCellClicked(col)">▼</div>
     }
@@ -10,10 +10,10 @@
 
 <!-- Game Board -->
 <div class="game-board">
-    @for (int row = 0; row < 6; row++) 
+    @for (var row = 0; row < 6; row++)
     {
         <div class="row">
-            @for (int col = 0; col < 7; col++)
+            @for (var col = 0; col < 7; col++)
             {
                 <div class="cell"
                      @onclick="() => OnCellClicked(col)"
@@ -25,14 +25,11 @@
 </div>
 
 @code {
-    [Parameter]
-    public string[,] Board { get; set; } = new string[6, 7]; // 6 lignes, 7 colonnes
+    [Parameter] public string[,] Board { get; set; } = new string[6, 7]; // 6 lignes, 7 colonnes
 
-    [Parameter]
-    public EventCallback<int> CellClicked { get; set; }
+    [Parameter] public EventCallback<int> CellClicked { get; set; }
 
-    [Parameter]
-    public bool IsDarkTheme { get; set; }
+    [Parameter] public bool IsDarkTheme { get; set; }
 
     private string GetCellContent(int row, int col)
     {
@@ -42,6 +39,7 @@
             Console.WriteLine($"Invalid access: row={row}, col={col}");
             return null; // Retour par défaut
         }
+
         return Board[row, col];
     }
 
@@ -58,4 +56,5 @@
             await CellClicked.InvokeAsync(col);
         }
     }
+
 }

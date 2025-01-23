@@ -1,8 +1,7 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Puissance4.DTOs;
 using Puissance4.Application.Services;
+using Puissance4.DTOs;
 
 namespace Puissance4.Application.Controllers;
 
@@ -11,35 +10,32 @@ namespace Puissance4.Application.Controllers;
 [Route("api/[controller]")]
 public class GamesController : ControllerBase
 {
-    private readonly GameService _gameService;
     private readonly AuthService _authService;
+    private readonly GameService _gameService;
 
     public GamesController(GameService gameService, AuthService authService)
     {
         _gameService = gameService;
         _authService = authService;
     }
-    
+
     [HttpGet("{id:int}")]
     public async Task<ActionResult<GameDto>> GetGameById(int id)
     {
         var gameDto = await _gameService.GetGameById(id);
 
-        if (gameDto == null)
-        {
-            return NotFound();
-        }
-        
+        if (gameDto == null) return NotFound();
+
         return Ok(gameDto);
     }
-    
+
     [HttpGet("pending")]
     public async Task<ActionResult<IEnumerable<GameDto>>> GetPendingGames()
     {
         var games = await _gameService.GetPendingGames();
         return Ok(games);
     }
-    
+
     [HttpGet("player")]
     public async Task<ActionResult<IEnumerable<GameDto>>> GetGamesOfPlayer()
     {
@@ -55,7 +51,7 @@ public class GamesController : ControllerBase
         var gameDto = await _gameService.CreateGame(playerId);
         return Ok(gameDto);
     }
-    
+
     [HttpPost("{gameId:int}/join")]
     public async Task<ActionResult<GameDto>> JoinGame(int gameId)
     {

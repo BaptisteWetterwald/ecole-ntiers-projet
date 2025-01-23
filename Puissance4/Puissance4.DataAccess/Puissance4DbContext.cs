@@ -3,15 +3,16 @@ using Puissance4.DataAccess.Entities;
 
 namespace Puissance4.DataAccess;
 
-
 public class Puissance4DbContext : DbContext
 {
+    public Puissance4DbContext(DbContextOptions<Puissance4DbContext> options) : base(options)
+    {
+    }
+
     public DbSet<EFPlayer> Players { get; set; }
     public DbSet<EFGame> Games { get; set; }
     public DbSet<EFGrid> Grids { get; set; }
     public DbSet<EFCell> Cells { get; set; }
-    
-    public Puissance4DbContext(DbContextOptions<Puissance4DbContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -49,7 +50,7 @@ public class Puissance4DbContext : DbContext
             .WithOne()
             .HasForeignKey<EFGame>(g => g.Id)
             .OnDelete(DeleteBehavior.Cascade);
-        
+
         // Grid - Cells relation
         modelBuilder.Entity<EFCell>()
             .HasOne(c => c.Grid)
@@ -60,6 +61,4 @@ public class Puissance4DbContext : DbContext
             .Property(c => c.TokenColor)
             .IsRequired();
     }
-
-    
 }

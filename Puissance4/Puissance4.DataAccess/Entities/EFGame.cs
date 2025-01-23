@@ -21,7 +21,7 @@ public class EFGame
     public EFPlayer? CurrentTurn { get; set; } // Joueur ayant le tour actuel (peut être null)
 
     public string Status { get; set; } // Statut du jeu (ex. "In Progress", "Completed")
-    
+
     public static class Statuses
     {
         public const string AwaitingGuest = "Awaiting Guest";

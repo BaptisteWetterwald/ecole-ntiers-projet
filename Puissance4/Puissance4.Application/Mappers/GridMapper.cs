@@ -1,6 +1,6 @@
 using Puissance4.Application.Domain;
-using Puissance4.DTOs;
 using Puissance4.DataAccess.Entities;
+using Puissance4.DTOs;
 
 namespace Puissance4.Application.Mappers;
 
@@ -15,19 +15,12 @@ public static class GridMapper
             Columns = efGrid.Columns,
             Cells = new Cell[efGrid.Rows, efGrid.Columns]
         };
-        
-        for (int row = 0; row < efGrid.Rows; row++)
-        {
-            for (int column = 0; column < efGrid.Columns; column++)
-            {
-                grid.Cells[row, column] = new Cell(row, column);
-            }
-        }
-        
-        foreach (var efCell in efGrid.Cells)
-        {
-            grid.Cells[efCell.Row, efCell.Column] = CellMapper.ToDomain(efCell);
-        }
+
+        for (var row = 0; row < efGrid.Rows; row++)
+        for (var column = 0; column < efGrid.Columns; column++)
+            grid.Cells[row, column] = new Cell(row, column);
+
+        foreach (var efCell in efGrid.Cells) grid.Cells[efCell.Row, efCell.Column] = CellMapper.ToDomain(efCell);
 
         return grid;
     }
@@ -41,29 +34,21 @@ public static class GridMapper
             Columns = grid.Columns,
             Cells = new List<EFCell>()
         };
-        
+
         foreach (var cell in grid.Cells)
-        {
             if (cell.Token != null) // Sauvegarder uniquement les cellules avec un token
-            {
                 efGrid.Cells.Add(CellMapper.ToEntity(cell, efGrid.Id));
-            }
-        }
-        
+
         return efGrid;
     }
-    
+
     public static GridDto ToDto(Grid grid)
     {
         var cellsDto = new List<CellDto>();
-        for (int row = 0; row < grid.Rows; row++)
-        {
-            for (int column = 0; column < grid.Columns; column++)
-            {
-                cellsDto.Add(CellMapper.ToDto(grid.Cells[row, column]));
-            }
-        }
-        
+        for (var row = 0; row < grid.Rows; row++)
+        for (var column = 0; column < grid.Columns; column++)
+            cellsDto.Add(CellMapper.ToDto(grid.Cells[row, column]));
+
         return new GridDto
         {
             Rows = grid.Rows,
@@ -71,7 +56,7 @@ public static class GridMapper
             Cells = cellsDto
         };
     }
-    
+
     public static GridDto ToDto(EFGrid efGrid)
     {
         var cellsDto = efGrid.Cells.Select(CellMapper.ToDto).ToList();

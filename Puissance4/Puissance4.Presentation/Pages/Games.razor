@@ -36,7 +36,9 @@ else
             <tr>
                 <td>@game.Id</td>
                 <td>@game.Host.Login</td>
-                <td><button class="btn btn-primary btn-sm" @onclick="() => JoinGame(game.Id)">Join</button></td>
+                <td>
+                    <button class="btn btn-primary btn-sm" @onclick="() => JoinGame(game.Id)">Join</button>
+                </td>
             </tr>
         }
         </tbody>
@@ -101,7 +103,7 @@ else
         pendingGames = pendingGames.Where(g => g.Host.Id != playerId).ToList();
         userGames = await GameService.GetGamesOfPlayerAsync();
     }
-    
+
     private void NavigateToGame(int gameId)
     {
         // Navigate to the game page with the game ID as a query parameter
@@ -115,18 +117,25 @@ else
         {
             pendingGames = await GameService.GetPendingGamesAsync();
             pendingGames = pendingGames.Where(g => g.Host.Id != playerId).ToList();
-            
+
             userGames = await GameService.GetGamesOfPlayerAsync();
         }
     }
-    
+
     // JoinGame()
     private async Task JoinGame(int gameId)
     {
         var joined = await GameService.JoinGameAsync(gameId);
         if (joined)
         {
-            NavigationManager.NavigateTo("/games");
+            pendingGames = await GameService.GetPendingGamesAsync();
+            pendingGames = pendingGames.Where(g => g.Host.Id != playerId).ToList();
+
+            userGames = await GameService.GetGamesOfPlayerAsync();
+            
+            // Reload the page to update the list of games
+            StateHasChanged();
         }
     }
+
 }

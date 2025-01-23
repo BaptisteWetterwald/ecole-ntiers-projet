@@ -9,6 +9,6 @@ public class EFCell
     // Clé étrangère vers EFGrid
     public int GridId { get; set; }
     public EFGrid Grid { get; set; }
-    
+
     public required string TokenColor { get; set; }
 }

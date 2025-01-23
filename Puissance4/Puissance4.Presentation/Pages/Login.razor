@@ -14,13 +14,15 @@
         <!-- Username -->
         <div class="form-group">
             <label for="username">Username</label>
-            <input id="username" type="text" class="form-control" @bind="Username" placeholder="Enter your username" required/>
+            <input id="username" type="text" class="form-control" @bind="Username" placeholder="Enter your username"
+                   required/>
         </div>
 
         <!-- Password -->
         <div class="form-group">
             <label for="password">Password</label>
-            <input id="password" type="password" class="form-control" @bind="Password" placeholder="Enter your password" required />
+            <input id="password" type="password" class="form-control" @bind="Password" placeholder="Enter your password"
+                   required/>
         </div>
 
         <!-- Login Button -->
@@ -35,11 +37,11 @@
 </div>
 
 @code {
-    
+
     private string Username { get; set; }
     private string Password { get; set; }
     private bool LoginFailed { get; set; }
-    
+
     protected override async Task OnInitializedAsync()
     {
         if (await AuthService.IsAuthenticated())
@@ -62,4 +64,5 @@
             LoginFailed = true;
         }
     }
+
 }

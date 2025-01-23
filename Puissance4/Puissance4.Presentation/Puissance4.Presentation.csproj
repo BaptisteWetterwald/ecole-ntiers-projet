@@ -7,22 +7,22 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0.1" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.1" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.1" PrivateAssets="all" />
-        <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.0" />
+        <PackageReference Include="Blazored.LocalStorage" Version="4.5.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0.1"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.1"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.1" PrivateAssets="all"/>
+        <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.0"/>
     </ItemGroup>
 
     <ItemGroup>
-      <AdditionalFiles Include="GameBoard.razor" />
-      <AdditionalFiles Include="Modal.razor" />
-      <AdditionalFiles Include="Pages\Game.razor" />
-      <AdditionalFiles Include="Pages\Login.razor" />
+        <AdditionalFiles Include="GameBoard.razor"/>
+        <AdditionalFiles Include="Modal.razor"/>
+        <AdditionalFiles Include="Pages\Game.razor"/>
+        <AdditionalFiles Include="Pages\Login.razor"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Puissance4.DTOs\Puissance4.DTOs.csproj" />
+        <ProjectReference Include="..\Puissance4.DTOs\Puissance4.DTOs.csproj"/>
     </ItemGroup>
 
 </Project>

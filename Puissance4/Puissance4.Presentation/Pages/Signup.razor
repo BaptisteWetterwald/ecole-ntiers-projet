@@ -9,19 +9,22 @@
         <!-- Username -->
         <div class="form-group">
             <label for="username">Username</label>
-            <input id="username" type="text" class="form-control" @bind="Username" placeholder="Enter your username" required />
+            <input id="username" type="text" class="form-control" @bind="Username" placeholder="Enter your username"
+                   required/>
         </div>
 
         <!-- Password -->
         <div class="form-group">
             <label for="password">Password</label>
-            <input id="password" type="password" class="form-control" @bind="Password" placeholder="Enter your password" required />
+            <input id="password" type="password" class="form-control" @bind="Password" placeholder="Enter your password"
+                   required/>
         </div>
 
         <!-- Confirm Password -->
         <div class="form-group">
             <label for="confirm-password">Confirm Password</label>
-            <input id="confirm-password" type="password" class="form-control" @bind="ConfirmPassword" placeholder="Confirm your password" required />
+            <input id="confirm-password" type="password" class="form-control" @bind="ConfirmPassword"
+                   placeholder="Confirm your password" required/>
         </div>
 
         <!-- Sign Up Button -->
@@ -32,7 +35,7 @@
     <p class="signup-link">
         Already have an account? <a href="/login">Log in</a>
     </p>
-    
+
     <p id="error-message">@ErrorMessage</p>
 </div>
 
@@ -61,6 +64,6 @@
         {
             ErrorMessage = "An error occurred while signing up. Please try again.";
         }
-        
     }
+
 }

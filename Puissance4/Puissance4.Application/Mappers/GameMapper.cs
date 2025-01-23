@@ -1,6 +1,6 @@
 using Puissance4.Application.Domain;
-using Puissance4.DTOs;
 using Puissance4.DataAccess.Entities;
+using Puissance4.DTOs;
 
 namespace Puissance4.Application.Mappers;
 
@@ -32,7 +32,7 @@ public static class GameMapper
             Status = domain.Status
         };
     }
-    
+
     public static GameDto ToDto(Game game)
     {
         return new GameDto
@@ -46,13 +46,10 @@ public static class GameMapper
             Grid = GridMapper.ToDto(game.Grid)
         };
     }
-    
+
     public static GameDto ToDto(EFGame entity)
     {
-        if (entity.Host == null)
-        {
-            throw new ArgumentException("Host is required");
-        }
+        if (entity.Host == null) throw new ArgumentException("Host is required");
         return new GameDto
         {
             Id = entity.Id,

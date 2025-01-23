@@ -12,11 +12,8 @@ public static class DbInitializer
         context.Database.EnsureCreated();
 
         // Look for any players.
-        if (context.Players.Any())
-        {
-            return;   // DB has been seeded
-        }
-        
+        if (context.Players.Any()) return; // DB has been seeded
+
         var players = new[]
         {
             new EFPlayer { Login = "Baptouste", PasswordHash = HashPassword("#qlflop") },
@@ -24,10 +21,10 @@ public static class DbInitializer
             new EFPlayer { Login = "Kepplouf", PasswordHash = HashPassword("Thomsoja") }
         };
         context.Players.AddRange(players);
-        
+
         context.SaveChanges();
     }
-    
+
     private static string HashPassword(string password)
     {
         return Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(password)));

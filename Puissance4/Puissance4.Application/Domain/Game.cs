@@ -2,13 +2,13 @@
 
 public class Game
 {
-    public static class Statuses
+    public Game(Player host)
     {
-        public const string AwaitingGuest = "Awaiting Guest";
-        public const string InProgress = "In Progress";
-        public const string Finished = "Finished";
+        Host = host;
+        CurrentTurn = null;
+        Grid = new Grid();
     }
-    
+
     public int Id { get; set; }
     public Grid Grid { get; set; }
     public Player Host { get; set; }
@@ -16,14 +16,7 @@ public class Game
     public Player? Winner { get; set; }
     public Player? CurrentTurn { get; set; }
     public string Status { get; set; } = Statuses.AwaitingGuest;
-    
-    public Game(Player host)
-    {
-        Host = host;
-        CurrentTurn = null;
-        Grid = new Grid();
-    }
-    
+
     public void JoinGame(Player guest)
     {
         if (Guest != null) throw new InvalidOperationException("A guest has already joined.");
@@ -32,7 +25,7 @@ public class Game
         CurrentTurn = Guest; // L'invité commence.
         Status = Statuses.InProgress;
     }
-    
+
     public void PlayTurn(Player player, int column)
     {
         if (!player.Equals(CurrentTurn)) throw new InvalidOperationException("Not your turn.");
@@ -58,9 +51,16 @@ public class Game
 
         Console.WriteLine("Grid updated: " + Grid);
     }
-    
+
     private void SwitchTurn()
     {
         CurrentTurn = CurrentTurn!.Equals(Host) ? Guest : Host;
+    }
+
+    public static class Statuses
+    {
+        public const string AwaitingGuest = "Awaiting Guest";
+        public const string InProgress = "In Progress";
+        public const string Finished = "Finished";
     }
 }

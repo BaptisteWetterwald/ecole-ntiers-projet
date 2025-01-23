@@ -6,7 +6,9 @@ namespace Puissance4.DataAccess.Repositories.Implementations;
 
 public class CellRepository : Repository<EFCell>, ICellRepository
 {
-    public CellRepository(Puissance4DbContext context) : base(context) { }
+    public CellRepository(Puissance4DbContext context) : base(context)
+    {
+    }
 
     public async Task<EFCell?> GetCellByCoordinatesAsync(int gridId, int row, int column)
     {

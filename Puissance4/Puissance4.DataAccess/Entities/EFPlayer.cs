@@ -8,7 +8,7 @@ public class EFPlayer
 
     // Jeux où le joueur est hôte
     public ICollection<EFGame> GamesAsHost { get; set; }
-    
+
     // Jeux où le joueur est invité
     public ICollection<EFGame> GamesAsGuest { get; set; }
 }

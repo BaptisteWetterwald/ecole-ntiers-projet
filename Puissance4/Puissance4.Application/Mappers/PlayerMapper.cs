@@ -1,6 +1,6 @@
 using Puissance4.Application.Domain;
-using Puissance4.DTOs;
 using Puissance4.DataAccess.Entities;
+using Puissance4.DTOs;
 
 namespace Puissance4.Application.Mappers;
 
@@ -23,7 +23,7 @@ public static class PlayerMapper
             Login = domain.Login
         };
     }
-    
+
     public static PlayerDto ToDto(Player player)
     {
         return new PlayerDto
@@ -32,7 +32,7 @@ public static class PlayerMapper
             Login = player.Login
         };
     }
-    
+
     public static PlayerDto ToDto(EFPlayer entity)
     {
         return new PlayerDto

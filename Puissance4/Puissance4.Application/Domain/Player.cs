@@ -7,12 +7,9 @@ public class Player
 
     public override bool Equals(object? obj)
     {
-        if (obj == null || GetType() != obj.GetType())
-        {
-            return false;
-        }
+        if (obj == null || GetType() != obj.GetType()) return false;
 
-        var player = (Player) obj;
+        var player = (Player)obj;
         return Id == player.Id;
     }
 }
