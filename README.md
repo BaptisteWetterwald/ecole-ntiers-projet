@@ -7,11 +7,12 @@
 
 ## Architecture
 
-Blaze4 est une application N-tiers structurée en quatre projets principaux :
+Blaze4 est une application N-tiers divisée en quatre projets, dont 3 tiers principaux : applicatif, base de données et frontend.
+
 1. **Puissance4.Application** : Gestion de la logique métier et API REST
 2. **Puissance4.DataAccess** : Accès à la base de données via Entity Framework Core
-3. **Puissance4.DTOs** : Modèles de données partagés entre l'API et le front-end
-4. **Puissance4.Presentation** : Front-end en Blazor WASM
+3. **Puissance4.Presentation** : Front-end en Blazor WASM
+4. **Puissance4.DTOs** : Modèles de données partagés entre l'API et le front-end
 
 ### Vue d'ensemble des projets
 
