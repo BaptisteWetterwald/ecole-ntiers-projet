@@ -1,5 +1,9 @@
 @page "/games/{id:int}"
-@attribute [Authorize]
+<!--attribute [Authorize]-->
+@using Puissance4.DTOs
+@inject GameService GameService
+@inject PlayerService PlayerService
+@inject NavigationManager NavigationManager
 
 <PageTitle>Blaze 4</PageTitle>
 

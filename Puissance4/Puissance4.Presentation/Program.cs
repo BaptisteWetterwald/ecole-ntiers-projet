@@ -12,11 +12,14 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 // Ajouter les services pour le stockage local
 builder.Services.AddBlazoredLocalStorage();
 
+// Enregistrer JwtAuthenticationStateProvider
+builder.Services.AddScoped<JwtAuthenticationStateProvider>();
+builder.Services.AddScoped<AuthenticationStateProvider>(sp => sp.GetRequiredService<JwtAuthenticationStateProvider>());
+
 // Ajouter un service d'authentification personnalisé
 builder.Services.AddScoped<AuthService>();
-
-// Ajouter le AuthenticationStateProvider pour gérer l'état d'authentification
-builder.Services.AddScoped<AuthenticationStateProvider, JwtAuthenticationStateProvider>();
+builder.Services.AddScoped<GameService>();
+builder.Services.AddScoped<PlayerService>();
 
 // Ajouter le service d'autorisation de base
 builder.Services.AddAuthorizationCore();

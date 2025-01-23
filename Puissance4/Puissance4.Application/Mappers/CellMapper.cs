@@ -1,5 +1,5 @@
 using Puissance4.Application.Domain;
-using Puissance4.Application.DTOs;
+using Puissance4.DTOs;
 using Puissance4.DataAccess.Entities;
 
 namespace Puissance4.Application.Mappers;

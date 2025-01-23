@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Puissance4.Application.DTOs;
 using Puissance4.Application.Services;
+using Puissance4.DTOs;
 
 namespace Puissance4.Application.Controllers;
 

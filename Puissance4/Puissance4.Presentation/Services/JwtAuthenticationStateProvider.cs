@@ -52,7 +52,7 @@ namespace Puissance4.Presentation.Services
             NotifyAuthenticationStateChanged(Task.FromResult(_anonymous));
         }
 
-        private IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
+        public IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
         {
             var payload = jwt.Split('.')[1];
             var jsonBytes = Convert.FromBase64String(PadBase64(payload));

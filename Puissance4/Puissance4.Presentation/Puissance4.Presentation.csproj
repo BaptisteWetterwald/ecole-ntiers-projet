@@ -21,4 +21,8 @@
       <AdditionalFiles Include="Pages\Login.razor" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Puissance4.DTOs\Puissance4.DTOs.csproj" />
+    </ItemGroup>
+
 </Project>

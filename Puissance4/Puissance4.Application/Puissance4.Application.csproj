@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Puissance4.DataAccess\Puissance4.DataAccess.csproj" />
+    <ProjectReference Include="..\Puissance4.DTOs\Puissance4.DTOs.csproj" />
   </ItemGroup>
 
 </Project>

@@ -8,11 +8,13 @@ public class AuthService
 {
     private readonly HttpClient _httpClient;
     private readonly ILocalStorageService _localStorage;
+    private readonly JwtAuthenticationStateProvider _jwtAuthenticationStateProvider;
 
-    public AuthService(HttpClient httpClient, ILocalStorageService localStorage)
+    public AuthService(HttpClient httpClient, ILocalStorageService localStorage, JwtAuthenticationStateProvider jwtAuthenticationStateProvider)
     {
         _httpClient = httpClient;
         _localStorage = localStorage;
+        _jwtAuthenticationStateProvider = jwtAuthenticationStateProvider;
     }
 
     public async Task<bool> Login(string username, string password)
@@ -41,5 +43,19 @@ public class AuthService
         var token = await _localStorage.GetItemAsync<string>("authToken");
         return !string.IsNullOrEmpty(token);
     }
+    
+    public async Task<bool> Register(string username, string password)
+    {
+        var response = await _httpClient.PostAsJsonAsync("auth/register", new { Username = username, Password = password });
+        return response.IsSuccessStatusCode;
+    }
 
+    public async Task<Object?> GetClaimAsync(string claim)
+    {
+        var token = await _localStorage.GetItemAsync<string>("authToken");
+        if (string.IsNullOrEmpty(token)) return string.Empty;
+        
+        var claims = _jwtAuthenticationStateProvider.ParseClaimsFromJwt(token);
+        return claims.FirstOrDefault(c => c.Type == claim)?.Value;
+    }
 }

@@ -4,9 +4,9 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.IdentityModel.Tokens;
-using Puissance4.Application.DTOs;
 using Puissance4.DataAccess.Entities;
 using Puissance4.DataAccess.Repositories.Interfaces;
+using Puissance4.DTOs;
 
 namespace Puissance4.Application.Services;
 

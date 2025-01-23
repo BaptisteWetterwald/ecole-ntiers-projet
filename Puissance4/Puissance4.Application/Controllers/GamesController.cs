@@ -1,8 +1,6 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Puissance4.Application.Domain;
-using Puissance4.Application.DTOs;
+using Puissance4.DTOs;
 using Puissance4.Application.Services;
 
 namespace Puissance4.Application.Controllers;

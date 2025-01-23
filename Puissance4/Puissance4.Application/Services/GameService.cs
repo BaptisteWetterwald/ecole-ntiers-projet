@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Puissance4.Application.Domain;
-using Puissance4.Application.DTOs;
+using Puissance4.DTOs;
 using Puissance4.Application.Mappers;
 using Puissance4.DataAccess.Entities;
 using Puissance4.DataAccess.Repositories.Interfaces;
