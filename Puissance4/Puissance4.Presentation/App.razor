@@ -1,6 +1,7 @@
 ﻿@inject NavigationManager NavigationManager
 @inject AuthService AuthService
 
+
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
@@ -20,6 +21,10 @@
         if (!isAuthenticated)
         {
             NavigationManager.NavigateTo("/login");
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/games");
         }
     }
 }

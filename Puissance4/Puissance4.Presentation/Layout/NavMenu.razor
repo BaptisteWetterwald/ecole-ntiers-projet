@@ -1,4 +1,6 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@inject AuthService AuthService
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">Blaze4</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -9,6 +11,14 @@
 
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="nav flex-column">
+        @if (!IsAuthenticated)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link d-flex align-items-center" href="login">
+                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Login
+                </NavLink>
+            </div>
+        }
         <div class="nav-item px-3">
             <NavLink class="nav-link d-flex align-items-center" href="games">
                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Games
@@ -26,7 +36,13 @@
     private bool collapseNavMenu = true;
 
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    public bool IsAuthenticated { get; set; }
 
+    protected override async Task OnInitializedAsync()
+    {
+        IsAuthenticated = await AuthService.IsAuthenticated();
+    }
+    
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;

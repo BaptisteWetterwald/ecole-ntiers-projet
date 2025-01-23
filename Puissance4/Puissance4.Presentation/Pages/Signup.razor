@@ -1,4 +1,6 @@
 @page "/signup"
+@inject AuthService AuthService
+@inject NavigationManager NavigationManager
 
 <h3>Sign Up</h3>
 
@@ -8,12 +10,6 @@
         <div class="form-group">
             <label for="username">Username</label>
             <input id="username" type="text" class="form-control" @bind="Username" placeholder="Enter your username" required />
-        </div>
-
-        <!-- Email -->
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input id="email" type="email" class="form-control" @bind="Email" placeholder="Enter your email address" required />
         </div>
 
         <!-- Password -->
@@ -36,23 +32,35 @@
     <p class="signup-link">
         Already have an account? <a href="/login">Log in</a>
     </p>
+    
+    <p id="error-message">@ErrorMessage</p>
 </div>
 
 @code {
     private string Username { get; set; }
-    private string Email { get; set; }
     private string Password { get; set; }
     private string ConfirmPassword { get; set; }
+    private string ErrorMessage { get; set; }
 
-    private void HandleSignUp()
+    private async Task HandleSignUp()
     {
         if (Password != ConfirmPassword)
         {
-            Console.WriteLine("Passwords do not match!");
+            ErrorMessage = "Passwords do not match. Please try again.";
             return;
         }
 
-        Console.WriteLine($"Username: {Username}, Email: {Email}");
-        // Add sign-up logic here (e.g., API call to create user)
+        // Call the AuthService to sign up the user
+        var success = await AuthService.Register(Username, Password);
+        if (success)
+        {
+            // Redirect to the login page after successful sign up
+            NavigationManager.NavigateTo("/login");
+        }
+        else
+        {
+            ErrorMessage = "An error occurred while signing up. Please try again.";
+        }
+        
     }
 }

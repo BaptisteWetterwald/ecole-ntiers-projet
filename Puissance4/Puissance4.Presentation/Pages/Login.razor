@@ -39,6 +39,14 @@
     private string Username { get; set; }
     private string Password { get; set; }
     private bool LoginFailed { get; set; }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        if (await AuthService.IsAuthenticated())
+        {
+            NavigationManager.NavigateTo("/games");
+        }
+    }
 
     private async Task HandleLogin()
     {

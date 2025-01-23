@@ -1,6 +1,6 @@
 @page "/games"
 @using Puissance4.DTOs
-<!--attribute [Authorize]-->
+@attribute [Authorize]
 @inject GameService GameService
 @inject PlayerService PlayerService
 @inject NavigationManager NavigationManager
@@ -114,6 +114,9 @@ else
         if (created)
         {
             pendingGames = await GameService.GetPendingGamesAsync();
+            pendingGames = pendingGames.Where(g => g.Host.Id != playerId).ToList();
+            
+            userGames = await GameService.GetGamesOfPlayerAsync();
         }
     }
     
