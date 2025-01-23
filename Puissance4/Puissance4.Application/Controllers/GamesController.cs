@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Puissance4.DTOs;
 using Puissance4.Application.Services;
@@ -81,6 +82,7 @@ public class GamesController : ControllerBase
         }
         catch (Exception e)
         {
+            Console.WriteLine(e.Message);
             return BadRequest(e.Message);
         }
     }

@@ -1,50 +1,139 @@
-@page "/games/{id:int}"
-<!--attribute [Authorize]-->
+@page "/games/{Id:int}"
 @using Puissance4.DTOs
 @inject GameService GameService
 @inject PlayerService PlayerService
 @inject NavigationManager NavigationManager
+@inject AuthService AuthService
 
 <PageTitle>Blaze 4</PageTitle>
 
 <div class="container">
     <main class="content">
         <!-- Title -->
-        <h1 class="title">Blaze 4</h1>
+        <h1 class="title">Game @Id</h1>
 
         <!-- Game Board -->
-        <GameBoard Board="board"
-                   CellClicked="PlaceToken"
-                   IsDarkTheme="isDarkTheme" />
+        @if (game != null)
+        {
+            <div class="game-info">
+                <p><strong>Game ID:</strong> @game.Id</p>
+                <p><strong>You are:</strong> @user?.Login</p>
+                <p><strong>Host:</strong> @game.Host.Login</p>
+                <p><strong>Guest:</strong> @(game.Guest?.Login ?? "Waiting for player")</p>
+                <p><strong>Current Turn:</strong> @game.CurrentTurn?.Login</p>
+                <p><strong>Status:</strong> @game.Status</p>
+            </div>
 
-        <!-- Current Player -->
-        <p class="current-player">Current Player: <span>@currentPlayer</span></p>
+            <div class="game-board-container">
+                <!-- Column Indicators -->
+                <div class="column-indicators">
+                    @for (int col = 0; col < game.Grid.Columns; col++)
+                    {
+                        <div class="indicator" @onclick="@(() => PlaceToken(col))">▼</div>
+                    }
+                </div>
+
+                <!-- Game Board -->
+                <div class="game-board">
+                    @for (var row = 0; row < game.Grid.Rows; row++)
+                    {
+                        <div class="row">
+                            @for (var col = 0; col < game.Grid.Columns; col++)
+                            {
+                                // print the cell
+                                
+                                var currentRow = row;
+                                var currentCol = col;
+                                var cell = game.Grid.Cells.FirstOrDefault(c => c.Row == currentRow && c.Column == currentCol);
+                                var tokenColor = cell?.TokenColor;
+                                var color = tokenColor switch
+                                {
+                                    "Red" => "red",
+                                    "Yellow" => "yellow",
+                                    _ => isDarkTheme ? "black" : "white"
+                                };
+                                <div class="cell"
+                                     style="background-color: @(tokenColor == null ? "white" : color)"
+                                     @onclick="@(() => PlaceToken(currentCol))">
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+
+            @if (errorMessage != null)
+            {
+                <p style="color: red;">@errorMessage</p>
+            }
+        }
+        else
+        {
+            <p><em>Loading game...</em></p>
+        }
     </main>
+    <!-- Button to switch dark/light -->
+    <button class="button" @onclick="() => isDarkTheme = !isDarkTheme">Switch Theme</button>
 </div>
 
-
 @code {
-
     [Parameter]
     public int Id { get; set; }
 
-    private string[,] board = new string[6, 7]; // Board state
-    private string currentPlayer = "Red"; // Current player's color
-    private bool isDarkTheme = false; // Theme state
+    private GameDto? game;
+    private string? errorMessage;
+    private bool isDarkTheme = true;
+    private PlayerDto? user;
+    private string MyLogin;
 
-    private void PlaceToken(int col)
+    protected override async Task OnInitializedAsync()
     {
-        for (int row = 5; row >= 0; row--)
+        try
         {
-            if (string.IsNullOrEmpty(board[row, col]))
+            // Fetch the game details from the API
+            game = await GameService.GetGameByIdAsync(Id);
+
+            if (game == null)
             {
-                board[row, col] = currentPlayer;
-                currentPlayer = currentPlayer == "Red" ? "Yellow" : "Red"; // Switch player
-                StateHasChanged();
-                return;
+                NavigationManager.NavigateTo("/games");
             }
+
+            string? login = await AuthService.GetClaimAsync("sub") as string;
+            // get the playerdto from the GameDto
+            user = game?.Host.Login == login ? game?.Host : game?.Guest;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error loading game: {ex.Message}";
+        }
+    }
+
+    private async Task PlaceToken(int column)
+    {
+        if (game == null || game.Status != "In Progress")
+        {
+            errorMessage = "Cannot play. The game is not in progress.";
+            return;
         }
 
-        Console.WriteLine("Column is full!");
+        try
+        {
+            var success = await GameService.PlayMoveAsync(Id, column);
+
+            if (success)
+            {
+                // Reload the game state after playing a move
+                game = await GameService.GetGameByIdAsync(Id);
+                errorMessage = null;
+            }
+            else
+            {
+                errorMessage = "Failed to place token. Try again.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error placing token: {ex.Message}";
+        }
     }
 }
