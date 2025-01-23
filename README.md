@@ -3,7 +3,7 @@
 ## Membres du groupe
 - **Baptiste WETTERWALD**
 - **Thomas KEPPLER**
-- **(Gauthier CETINGOZ)**
+- **Gauthier CETINGOZ**
 
 ## Architecture
 
