@@ -60,7 +60,7 @@ Ce projet gère l’accès à la base de données SQLite via Entity Framework Co
 
 - **Autres composants** :
     - `DataAccessConfiguration.cs` : Configure les repositories et la connexion à la DB.
-    - `DbInitializer.cs` : Initialise les utilisateurs dans la DB avec des comptes prédéfinis :
+    - `DbInitializer.cs` : Initialise les utilisateurs dans la DB avec des comptes prédéfinis (Username / Password) :
         - `Baptouste` / `#qlflop`
         - `Mehmett` / `ChefMehmett`
         - `Kepplouf` / `Thomsoja`
