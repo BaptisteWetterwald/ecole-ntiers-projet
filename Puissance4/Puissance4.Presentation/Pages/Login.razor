@@ -1,6 +1,14 @@
 @page "/login"
+@using Puissance4.Presentation.Services
+@inject AuthService AuthService
+@inject NavigationManager NavigationManager
 
 <h3>Login</h3>
+
+@if (LoginFailed)
+{
+    <p style="color: red;">Invalid username or password. Please try again.</p>
+}
 
 <div class="login-container">
     <form class="login-form">
@@ -28,12 +36,23 @@
 </div>
 
 @code {
+    
     private string Username { get; set; }
     private string Password { get; set; }
+    private bool LoginFailed { get; set; }
 
     private async Task HandleLogin()
     {
-        // call AuthService to login
-        Console.WriteLine("Username: " + Username);
+        LoginFailed = false;
+
+        var success = await AuthService.Login(Username, Password);
+        if (success)
+        {
+            NavigationManager.NavigateTo("/games");
+        }
+        else
+        {
+            LoginFailed = true;
+        }
     }
 }
