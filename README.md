@@ -13,6 +13,7 @@ Blaze4 est une application N-tiers divisée en quatre projets, dont 3 tiers prin
 2. **Puissance4.DataAccess** : Accès à la base de données via Entity Framework Core
 3. **Puissance4.Presentation** : Front-end en Blazor WASM
 4. **Puissance4.DTOs** : Modèles de données partagés entre l'API et le front-end
+5. **Puissance4.Tests** : Tests pour les 4 autres projets
 
 ### Vue d'ensemble des projets
 
@@ -100,6 +101,10 @@ Ce projet gère l’interface utilisateur via Blazor WASM. Il communique avec l�
     - `AuthenticatedHttpClientHandler.cs` : Gestion des requêtes avec token JWT.
     - `AuthService.cs`, `GameService.cs`, `PlayerService.cs` : Services pour l’interaction avec l’API.
     - `JwtAuthenticationStateProvider.cs` : Gestion de l’état d’authentification.
+
+#### 4. Puissance4.Tests
+
+Comme son nom l'indique, il contient les tests pour tous les projets.
 
 **URLs de développement** :
 - HTTPS : `https://localhost:6969`
