@@ -161,11 +161,10 @@ dotnet ef database update --project Puissance4.DataAccess
 
 ## Remarque
 
-Le front n'étant pas la priorité du projet, certaines fonctionnalités ne sont pas très ergonomiques, ex : la grille ne s'actualise pas automatiquement après un coup adverse. Il est nécessaire de rafraîchir la page pour voir les changements.
-
+Le front n'étant pas la priorité du projet, certaines fonctionnalités ne sont pas très ergonomiques, ex : après s'être connecté, il est nécessaire de rafraîchir la page pour voir la liste des jeux (/games).
 L'accent a été mis sur la logique métier et la communication entre les différents projets.
 
 
-## Diagramme des classes 
+## Diagramme de classes 
 
 ![Diagramme de classes](https://raw.githubusercontent.com/BaptisteWetterwald/ecole-ntiers-projet/main/ClassDiagram.svg)
