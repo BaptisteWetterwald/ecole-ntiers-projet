@@ -26,7 +26,6 @@ public class GameService
         _cellRepository = cellRepository;
     }
 
-
     public async Task<GameDto> CreateGame(int hostId)
     {
         Console.WriteLine("GameService: CreateGame(" + hostId + ")");
@@ -36,6 +35,7 @@ public class GameService
 
         var game = new Game(PlayerMapper.ToDomain(host));
         var efGame = GameMapper.ToEntity(game);
+        efGame.Host = host; // Assign Host explicitly to avoid null reference
         await _gameRepository.AddAsync(efGame);
 
         return GameMapper.ToDto(efGame); // Using efGame instead of game to get the Id from the database
@@ -116,7 +116,6 @@ public class GameService
 
         return GameMapper.ToDto(efGame);
     }
-
 
     public async Task<GameDto?> GetGameById(int id)
     {

@@ -35,6 +35,7 @@ public class AuthService
         _playerRepository = playerRepository;
     }
 
+    /*
     public async Task<string> GenerateToken(string username)
     {
         var user = await _playerRepository.GetByLoginAsync(username);
@@ -48,7 +49,47 @@ public class AuthService
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+        var rawKey = _configuration["Jwt:Key"];
+        var keyBytes = Convert.FromBase64String(rawKey.Trim()); // Décodage Base64
+        var key = new SymmetricSecurityKey(keyBytes);
+
+        //var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));  //Blaze4LeProjetPuissance4DeLaMortQuiTue
+        //var key = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32)); // 32 octets = 256 bits
+        Console.WriteLine($"Generated Key: {key}");
+
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        var token = new JwtSecurityToken(
+            _configuration["Jwt:Issuer"],
+            _configuration["Jwt:Audience"],
+            claims,
+            expires: DateTime.Now.AddHours(1),
+            signingCredentials: creds
+        );
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+    */
+
+    public async Task<string> GenerateToken(string username)
+    {
+        var user = await _playerRepository.GetByLoginAsync(username);
+        if (user == null) throw new Exception("Could not find user ID");
+        var userId = user.Id;
+
+        var claims = new[]
+        {
+            new Claim(JwtRegisteredClaimNames.Sub, username),
+            new Claim("UserId", userId.ToString()),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        };
+
+        var rawKey = _configuration["Jwt:Key"];
+        if (string.IsNullOrEmpty(rawKey) || rawKey.Length < 32)
+            throw new ArgumentException("The JWT key must be at least 32 characters long.");
+
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(rawKey));
+
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
@@ -62,12 +103,14 @@ public class AuthService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
+
     public int GetUserId()
     {
         var userId = _httpContextAccessor.HttpContext?.User?.FindFirst("UserId")?.Value;
         if (userId == null) throw new Exception("Could not find user ID");
         return int.Parse(userId);
     }
+
 
     private string HashPassword(string password)
     {
@@ -88,7 +131,6 @@ public class AuthService
 
     public async Task Register(LoginDto loginDto)
     {
-        // Vérifier si l'utilisateur existe déjà
         var user = _playerRepository.GetByLoginAsync(loginDto.Username).Result;
         if (user != null) throw new Exception("User already exists");
 
